@@ -1,4 +1,4 @@
-# D-Units (Digital Units)
+# D-Units (Digital-Units)
 
 The `D-Units` project's goal is to define a system, based on scientific definitions, to create and convert units.
 
@@ -18,10 +18,10 @@ Each part starts with the character `\`, defining one of the following positions
 These three parts allows to define a simple digital unit.
 To create a composed unit it is required to either:
 
-- _multiply_ it with other unit. This requires no aditional part, defining the composed unit "newton meter" is per se the unit "newton" multiplied by "meter"
+- _multiply_ it with other unit. This requires no additional part, defining the composed unit "newton meter" is per se the unit "newton" multiplied by "meter"
 - _divide_ it over other unit. For this purpose, the part "per" is introduced. 
 
-_**Examples**_
+### Examples
 
 - liter (L) -> `"\liter"`
 - kilonewton (kN) -> `"\kilo\newton"`
@@ -30,9 +30,9 @@ _**Examples**_
 - Newton meter (Nm) -> `"\newton\metre"`
 
 > [!Note]
-> The base part for meter is the french `metre`, as that is how it is specified within the SI Brochure.
+> The base part for meter is the French `metre`, as that is how it is specified within the SI Brochure.
 
 ## External Links
 
-- [**SI brochure**](https://www.bipm.org/en/publications/si-brochure): It contains the latests rules regarding the SI units.
+- [**SI brochure**](https://www.bipm.org/en/publications/si-brochure): It contains the latest rules regarding the SI units.
 - [`dsiUnits`](https://gitlab1.ptb.de/digitaldynamicmeasurement/dcc-and-dsi/dsiUnits): A python package with the goal to establish a digital library for SI units.
