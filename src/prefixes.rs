@@ -1,6 +1,11 @@
+use std::str::FromStr;
+
 pub trait ScaleFactor {
     fn factor(&self) -> f64;
 }
+
+#[derive(Debug)]
+pub struct ParsePrefixError;
 
 /// All SI prefixes defined with base 10
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -60,6 +65,38 @@ impl ScaleFactor for Prefix {
     }
 }
 
+impl FromStr for Prefix {
+    type Err = ParsePrefixError;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.to_lowercase().as_str() {
+            "quetta" => Ok(Prefix::Quetta),
+            "ronna" => Ok(Prefix::Ronna),
+            "yotta" => Ok(Prefix::Yotta),
+            "zetta" => Ok(Prefix::Zetta),
+            "exa" => Ok(Prefix::Exa),
+            "peta" => Ok(Prefix::Peta),
+            "tera" => Ok(Prefix::Tera),
+            "giga" => Ok(Prefix::Giga),
+            "mega" => Ok(Prefix::Mega),
+            "kilo" => Ok(Prefix::Kilo),
+            "hecto" => Ok(Prefix::Hecto),
+            "deca" => Ok(Prefix::Deca),
+            "deci" => Ok(Prefix::Deci),
+            "centi" => Ok(Prefix::Centi),
+            "milli" => Ok(Prefix::Milli),
+            "micro" => Ok(Prefix::Micro),
+            "nano" => Ok(Prefix::Nano),
+            "pico" => Ok(Prefix::Pico),
+            "femto" => Ok(Prefix::Femto),
+            "atto" => Ok(Prefix::Atto),
+            "zepto" => Ok(Prefix::Zepto),
+            "ronto" => Ok(Prefix::Ronto),
+            "quecto" => Ok(Prefix::Quecto),
+            _ => Err(ParsePrefixError),
+        }
+    }
+}
+
 /// All binary prefixes defined with base 2
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum BinaryPrefix {
@@ -90,8 +127,8 @@ impl ScaleFactor for BinaryPrefix {
 
 #[cfg(test)]
 mod tests {
-    use approx::assert_relative_eq;
     use super::*;
+    use approx::assert_relative_eq;
 
     #[test]
     fn base_10_scale_factor() {
