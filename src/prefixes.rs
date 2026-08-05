@@ -77,13 +77,13 @@ impl ScaleFactor for BinaryPrefix {
     fn factor(&self) -> f64 {
         match self {
             BinaryPrefix::Kibi => 1024.0,
-            BinaryPrefix::Mebi => 1024_f64.powi(2),
-            BinaryPrefix::Gibi => 1024_f64.powi(3),
-            BinaryPrefix::Tebi => 1024_f64.powi(4),
-            BinaryPrefix::Pebi => 1024_f64.powi(5),
-            BinaryPrefix::Exbi => 1024_f64.powi(6),
-            BinaryPrefix::Zebi => 1024_f64.powi(7),
-            BinaryPrefix::Yobi => 1024_f64.powi(8),
+            BinaryPrefix::Mebi => 1048576.0,
+            BinaryPrefix::Gibi => 1073741824.0,
+            BinaryPrefix::Tebi => 1099511627776.0,
+            BinaryPrefix::Pebi => 1125899906842624.0,
+            BinaryPrefix::Exbi => 1152921504606846976.0,
+            BinaryPrefix::Zebi => 1180591620717411303424.0,
+            BinaryPrefix::Yobi => 1208925819614629174706176.0,
         }
     }
 }
@@ -118,5 +118,17 @@ mod tests {
         assert_relative_eq!(Prefix::Zepto.factor(), 10.0_f64.powi(-21));
         assert_relative_eq!(Prefix::Ronto.factor(), 10.0_f64.powi(-27));
         assert_relative_eq!(Prefix::Quecto.factor(), 10.0_f64.powi(-30));
+    }
+
+    #[test]
+    fn base_2_scale_factor() {
+        assert_relative_eq!(BinaryPrefix::Kibi.factor(), 2.0_f64.powi(10));
+        assert_relative_eq!(BinaryPrefix::Mebi.factor(), 2.0_f64.powi(20));
+        assert_relative_eq!(BinaryPrefix::Gibi.factor(), 2.0_f64.powi(30));
+        assert_relative_eq!(BinaryPrefix::Tebi.factor(), 2.0_f64.powi(40));
+        assert_relative_eq!(BinaryPrefix::Pebi.factor(), 2.0_f64.powi(50));
+        assert_relative_eq!(BinaryPrefix::Exbi.factor(), 2.0_f64.powi(60));
+        assert_relative_eq!(BinaryPrefix::Zebi.factor(), 2.0_f64.powi(70));
+        assert_relative_eq!(BinaryPrefix::Yobi.factor(), 2.0_f64.powi(80));
     }
 }
