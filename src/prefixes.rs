@@ -33,13 +33,13 @@ pub enum Prefix {
 impl ScaleFactor for Prefix {
     fn factor(&self) -> f64 {
         match self {
-            Prefix::Quetta => 10.0_f64.powi(30),
-            Prefix::Ronna => 10.0_f64.powi(27),
-            Prefix::Yotta => 10.0_f64.powi(24),
-            Prefix::Zetta => 10.0_f64.powi(21),
-            Prefix::Exa => 10.0_f64.powi(18),
-            Prefix::Peta => 10.0_f64.powi(15),
-            Prefix::Tera => 10.0_f64.powi(12),
+            Prefix::Quetta => 1_000_000_000_000_000_000_000_000_000_000.0,
+            Prefix::Ronna => 1_000_000_000_000_000_000_000_000_000.0,
+            Prefix::Yotta => 1_000_000_000_000_000_000_000_000.0,
+            Prefix::Zetta => 1_000_000_000_000_000_000_000.0,
+            Prefix::Exa => 1_000_000_000_000_000_000.0,
+            Prefix::Peta => 1_000_000_000_000_000.0,
+            Prefix::Tera => 1_000_000_000_000.0,
             Prefix::Giga => 1_000_000_000.0,
             Prefix::Mega => 1_000_000.0,
             Prefix::Kilo => 1_000.0,
@@ -50,12 +50,12 @@ impl ScaleFactor for Prefix {
             Prefix::Milli => 0.001,
             Prefix::Micro => 0.000_001,
             Prefix::Nano => 0.000_000_001,
-            Prefix::Pico => 10.0_f64.powi(-12),
-            Prefix::Femto => 10.0_f64.powi(-15),
-            Prefix::Atto => 10.0_f64.powi(-18),
-            Prefix::Zepto => 10.0_f64.powi(-21),
-            Prefix::Ronto => 10.0_f64.powi(-27),
-            Prefix::Quecto => 10.0_f64.powi(-30),
+            Prefix::Pico => 0.000_000_000_001,
+            Prefix::Femto => 0.000_000_000_000_001,
+            Prefix::Atto => 0.000_000_000_000_000_001,
+            Prefix::Zepto => 0.000_000_000_000_000_000_001,
+            Prefix::Ronto => 0.000_000_000_000_000_000_000_001,
+            Prefix::Quecto => 0.000_000_000_000_000_000_000_000_001,
         }
     }
 }
@@ -85,5 +85,38 @@ impl ScaleFactor for BinaryPrefix {
             BinaryPrefix::Zebi => 1024_f64.powi(7),
             BinaryPrefix::Yobi => 1024_f64.powi(8),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use approx::assert_relative_eq;
+    use super::*;
+
+    #[test]
+    fn base_10_scale_factor() {
+        assert_relative_eq!(Prefix::Quetta.factor(), 10.0_f64.powi(30));
+        assert_relative_eq!(Prefix::Ronna.factor(), 10.0_f64.powi(27));
+        assert_relative_eq!(Prefix::Yotta.factor(), 10.0_f64.powi(24));
+        assert_relative_eq!(Prefix::Zetta.factor(), 10.0_f64.powi(21));
+        assert_relative_eq!(Prefix::Exa.factor(), 10.0_f64.powi(18));
+        assert_relative_eq!(Prefix::Peta.factor(), 10.0_f64.powi(15));
+        assert_relative_eq!(Prefix::Tera.factor(), 10.0_f64.powi(12));
+        assert_relative_eq!(Prefix::Giga.factor(), 10.0_f64.powi(9));
+        assert_relative_eq!(Prefix::Mega.factor(), 10.0_f64.powi(6));
+        assert_relative_eq!(Prefix::Kilo.factor(), 10.0_f64.powi(3));
+        assert_relative_eq!(Prefix::Hecto.factor(), 10.0_f64.powi(2));
+        assert_relative_eq!(Prefix::Deca.factor(), 10.0_f64.powi(1));
+        assert_relative_eq!(Prefix::Deci.factor(), 10.0_f64.powi(-1));
+        assert_relative_eq!(Prefix::Centi.factor(), 10.0_f64.powi(-2));
+        assert_relative_eq!(Prefix::Milli.factor(), 10.0_f64.powi(-3));
+        assert_relative_eq!(Prefix::Micro.factor(), 10.0_f64.powi(-6));
+        assert_relative_eq!(Prefix::Nano.factor(), 10.0_f64.powi(-9));
+        assert_relative_eq!(Prefix::Pico.factor(), 10.0_f64.powi(-12));
+        assert_relative_eq!(Prefix::Femto.factor(), 10.0_f64.powi(-15));
+        assert_relative_eq!(Prefix::Atto.factor(), 10.0_f64.powi(-18));
+        assert_relative_eq!(Prefix::Zepto.factor(), 10.0_f64.powi(-21));
+        assert_relative_eq!(Prefix::Ronto.factor(), 10.0_f64.powi(-27));
+        assert_relative_eq!(Prefix::Quecto.factor(), 10.0_f64.powi(-30));
     }
 }
