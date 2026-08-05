@@ -1,11 +1,10 @@
 pub trait ScaleFactor {
-    type Output;
-    fn factor(self) -> Self::Output;
+    fn factor(&self) -> f64;
 }
 
 /// All SI prefixes defined with base 10
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-enum Prefix {
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum Prefix {
     Quetta, // 1e30
     Ronna,  // 1e27
     Yotta,  // 1e24
@@ -32,16 +31,15 @@ enum Prefix {
 }
 
 impl ScaleFactor for Prefix {
-    type Output = f32;
-    fn factor(self) -> f32 {
+    fn factor(&self) -> f64 {
         match self {
-            Prefix::Quetta => 10.0_f32.powi(30),
-            Prefix::Ronna => 10.0_f32.powi(27),
-            Prefix::Yotta => 10.0_f32.powi(24),
-            Prefix::Zetta => 10.0_f32.powi(21),
-            Prefix::Exa => 10.0_f32.powi(18),
-            Prefix::Peta => 10.0_f32.powi(15),
-            Prefix::Tera => 10.0_f32.powi(12),
+            Prefix::Quetta => 10.0_f64.powi(30),
+            Prefix::Ronna => 10.0_f64.powi(27),
+            Prefix::Yotta => 10.0_f64.powi(24),
+            Prefix::Zetta => 10.0_f64.powi(21),
+            Prefix::Exa => 10.0_f64.powi(18),
+            Prefix::Peta => 10.0_f64.powi(15),
+            Prefix::Tera => 10.0_f64.powi(12),
             Prefix::Giga => 1_000_000_000.0,
             Prefix::Mega => 1_000_000.0,
             Prefix::Kilo => 1_000.0,
@@ -52,40 +50,40 @@ impl ScaleFactor for Prefix {
             Prefix::Milli => 0.001,
             Prefix::Micro => 0.000_001,
             Prefix::Nano => 0.000_000_001,
-            Prefix::Pico => 10.0_f32.powi(-12),
-            Prefix::Femto => 10.0_f32.powi(-15),
-            Prefix::Atto => 10.0_f32.powi(-18),
-            Prefix::Zepto => 10.0_f32.powi(-21),
-            Prefix::Ronto => 10.0_f32.powi(-27),
-            Prefix::Quecto => 10.0_f32.powi(-30),
+            Prefix::Pico => 10.0_f64.powi(-12),
+            Prefix::Femto => 10.0_f64.powi(-15),
+            Prefix::Atto => 10.0_f64.powi(-18),
+            Prefix::Zepto => 10.0_f64.powi(-21),
+            Prefix::Ronto => 10.0_f64.powi(-27),
+            Prefix::Quecto => 10.0_f64.powi(-30),
         }
     }
 }
 
 /// All binary prefixes defined with base 2
-enum BinaryPrefix {
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum BinaryPrefix {
     Kibi, // 2^10 = 1024
     Mebi, // 2^20 = 1024^2
-    Gibi, // 2^30
-    Tebi, // 2^40
-    Pebi, // 2^50
-    Exbi, // 2^60
-    Zebi, // 2^70
-    Yobi, // 2^80
+    Gibi, // 2^30 = 1024^3
+    Tebi, // 2^40 = 1024^4
+    Pebi, // 2^50 = 1024^5
+    Exbi, // 2^60 = 1024^6
+    Zebi, // 2^70 = 1024^7
+    Yobi, // 2^80 = 1024^8
 }
 
 impl ScaleFactor for BinaryPrefix {
-    type Output = u128;
-    fn factor(self) -> u128 {
+    fn factor(&self) -> f64 {
         match self {
-            BinaryPrefix::Kibi => 1024,
-            BinaryPrefix::Mebi => 1024_u128.pow(2),
-            BinaryPrefix::Gibi => 1024_u128.pow(3),
-            BinaryPrefix::Tebi => 1024_u128.pow(4),
-            BinaryPrefix::Pebi => 1024_u128.pow(5),
-            BinaryPrefix::Exbi => 1024_u128.pow(6),
-            BinaryPrefix::Zebi => 1024_u128.pow(7),
-            BinaryPrefix::Yobi => 1024_u128.pow(8),
+            BinaryPrefix::Kibi => 1024.0,
+            BinaryPrefix::Mebi => 1024_f64.powi(2),
+            BinaryPrefix::Gibi => 1024_f64.powi(3),
+            BinaryPrefix::Tebi => 1024_f64.powi(4),
+            BinaryPrefix::Pebi => 1024_f64.powi(5),
+            BinaryPrefix::Exbi => 1024_f64.powi(6),
+            BinaryPrefix::Zebi => 1024_f64.powi(7),
+            BinaryPrefix::Yobi => 1024_f64.powi(8),
         }
     }
 }
