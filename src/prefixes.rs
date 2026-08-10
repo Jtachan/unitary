@@ -238,9 +238,22 @@ mod tests {
 
     #[test]
     fn prefix_str_parsing() {
+        // SI Prefix
         let prefix: SIPrefix = "KILO".parse().unwrap();
         assert_eq!(prefix, SIPrefix::Kilo);
+        let prefix = SIPrefix::from_str("meGA").unwrap();
+        assert_eq!(prefix, SIPrefix::Mega);
+
+        // BinPrefix
         let prefix: BinaryPrefix = "kibi".parse().unwrap();
         assert_eq!(prefix, BinaryPrefix::Kibi);
+        let prefix = BinaryPrefix::from_str("meBI").unwrap();
+        assert_eq!(prefix, BinaryPrefix::Mebi);
+
+        // Errors
+        let result = SIPrefix::from_str("invalid");
+        assert!(result.is_err());
+        let result = BinaryPrefix::from_str("invalid");
+        assert!(result.is_err());
     }
 }
