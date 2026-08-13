@@ -2,6 +2,15 @@
 
 use std::str::FromStr;
 
+#[derive(Debug)]
+pub struct ParseUnitError {
+    _message: String,
+}
+
+// -------------------------------------------------------------------
+//                      Enums defining all units
+// -------------------------------------------------------------------
+
 /// Enumeration for all base units.
 ///
 /// `unitary` defines as "base unit" any that cannot be simplified in terms of other units.
@@ -23,9 +32,10 @@ pub enum BaseUnit {
     /// SI unit for **time**, represented with the unit symbol `s`.
     Second,
     /// SI unit for **length**, represented with the unit the symbol `m`.
-    /// The notation is defined as "metre" and not "meter" as that is the way defined in the
-    /// [BIPM SI Brochure](https://www.bipm.org/en/publications/si-brochure).
-    Metre,
+    /// The notation is defined as "meter" and not "metre" (as defined in the
+    /// [BIPM SI Brochure](https://www.bipm.org/en/publications/si-brochure)) to avoid
+    /// possible confusions while using the package.
+    Meter,
     /// SI unit for **mass**, represented with the unit the symbol `g`.
     /// Gram is used instead of 'Kilogram' (SI defined base unit for mass in the
     /// [BIPM SI Brochure](https://www.bipm.org/en/publications/si-brochure)) for
@@ -50,10 +60,43 @@ pub enum BaseUnit {
     Bit,
 }
 
-#[derive(Debug)]
-pub struct ParseUnitError {
-    _message: String,
+/// Enumeration for all derived units.
+///
+/// `unitary` consider a "derived unit" as any unit which can be simplified as a group of one
+/// or more base units, joined together through mathematical operations.
+///
+/// **Examples**
+/// `liter` -> cubic decimeter (`\deci\meter\tothe{3}`)
+/// `byte`  -> four (4) bits
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum DerivedUnit {
+    /// Derived unit for **binary information**, defined as 2^2 (four) bits and represented
+    /// with the symbol `B`.
+    Byte,
+    /// Derived unit for **volume**, defined as a cubic decimeter (10^-3 cubic meters) and
+    /// represented with the symbol `L`.
+    /// The SI Brochure accepts both symbols `l` and `L` to define liters. In order to avoid
+    /// confusion, `unitary` uses the symbol `L` to diferenciate liters from the numeral one (`1`)
+    /// and the capital letter `I`, which might look like the lowercase `l` at some fonts.
+    Liter,
 }
+
+// -------------------------------------------------------------------
+//                          Custom trait definitions
+// -------------------------------------------------------------------
+
+/// Trait to simplify any unit to its base unit.
+/// The result of the simplification is the member of the [`BaseUnit`] enum together with
+/// the scale factor from the original unit to its base unit.
+///
+/// todo: modify for those derived units that use multiple base units.
+pub trait UnitSimplify {
+    fn to_base_unit(&self) -> (BaseUnit, f64);
+}
+
+// -------------------------------------------------------------------
+//                  Traits implementation for the enums
+// -------------------------------------------------------------------
 
 /// Parses a string (either unit name or type of quantity for the unit) as case-insensitive.
 ///
@@ -78,7 +121,7 @@ impl FromStr for BaseUnit {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.to_lowercase().as_str() {
             "second" | "time" => Ok(BaseUnit::Second),
-            "metre" | "length" => Ok(BaseUnit::Metre),
+            "meter" | "length" => Ok(BaseUnit::Meter),
             "gram" | "mass" => Ok(BaseUnit::Gram),
             "ampere" | "current" => Ok(BaseUnit::Ampere),
             "kelvin" | "temperature" => Ok(BaseUnit::Kelvin),
@@ -89,14 +132,17 @@ impl FromStr for BaseUnit {
                 // Todo: Use the error for panicking at user level.
                 _message: format!(
                     "'{}' is not a valid SI base unit. Make sure your unit has no typos \
-                    and it is in singular. E.G.: 'second' instead of 'seconds' or 'metre' \
-                    instead of 'meter'. ",
+                    and it is in singular. E.G.: 'second' instead of 'seconds'.",
                     s
                 ),
             }),
         }
     }
 }
+
+// -------------------------------------------------------------------
+//                                 Tests
+// -------------------------------------------------------------------
 
 #[cfg(test)]
 mod test {
@@ -106,7 +152,7 @@ mod test {
     fn base_si_unit_parsing() {
         let si_unit_names = [
             ("second", "time"),
-            ("metre", "length"),
+            ("meter", "length"),
             ("gram", "mass"),
             ("ampere", "current"),
             ("kelvin", "temperature"),
@@ -121,7 +167,7 @@ mod test {
             assert_eq!(base_unit, base_quantity);
         }
 
-        let result = BaseUnit::from_str("meter");
+        let result = BaseUnit::from_str("metre");
         assert!(result.is_err());
     }
 }
