@@ -31,6 +31,12 @@ pub enum BaseSIUnit {
     /// Unit for adimensional quantities, without a symbol to represent.
     /// This member cannot be defined together with any prefix.
     One,
+    /// Unit for **phase angles**, represented with the symbol `rad`.
+    Radian,
+    /// Unit for **binary information**, represented with the symbol `bit`.
+    /// The binary information is the only quantity that can be expressed with `NominalPrefixes`
+    /// (kilo, milli, mega, etc.) as well as with `BinaryPrefixes`
+    Bit,
 }
 
 #[derive(Debug)]
