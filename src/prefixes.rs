@@ -7,6 +7,10 @@ use std::str::FromStr;
 #[derive(Debug)]
 pub struct ParsePrefixError;
 
+// -------------------------------------------------------------------
+//                      Enums defining all prefixes
+// -------------------------------------------------------------------
+
 /// Nominal (SI) prefixes defined with base-10.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum NominalPrefix {
@@ -79,6 +83,25 @@ pub enum BinaryPrefix {
     Yobi,
 }
 
+// -------------------------------------------------------------------
+//                        Custom trait definitions
+// -------------------------------------------------------------------
+
+/// Trait allowing a prefix to be converted into a numeric scale factor.
+///
+/// Implemented by both [`NominalPrefix`] and [`BinaryPrefix`] to allow both enums to be
+/// handled generically.
+pub trait ScaleFactor {
+    /// Returns the multiplicative scale as an `f64`.
+    ///
+    /// E.G.: `Kilo.factor()` -> `1000.0` and `Kibi.factor()` -> `1024.0`
+    fn factor(&self) -> f64;
+}
+
+// -------------------------------------------------------------------
+//                  Traits implementation for the enums
+// -------------------------------------------------------------------
+
 /// Parses a prefix name (case-insensitive), e.g. `"kilo"` or `"KILO"` → [`NominalPrefix::Kilo`].
 ///
 /// # Errors
@@ -136,17 +159,6 @@ impl FromStr for BinaryPrefix {
     }
 }
 
-/// Trait allowing a prefix to be converted into a numeric scale factor.
-///
-/// Implemented by both [`NominalPrefix`] and [`BinaryPrefix`] to allow both enums to be
-/// handled generically.
-pub trait ScaleFactor {
-    /// Returns the multiplicative scale as an `f64`.
-    ///
-    /// E.G.: `Kilo.factor()` -> `1000.0` and `Kibi.factor()` -> `1024.0`
-    fn factor(&self) -> f64;
-}
-
 impl ScaleFactor for NominalPrefix {
     fn factor(&self) -> f64 {
         match self {
@@ -191,6 +203,10 @@ impl ScaleFactor for BinaryPrefix {
         }
     }
 }
+
+// -------------------------------------------------------------------
+//                                 Tests
+// -------------------------------------------------------------------
 
 #[cfg(test)]
 mod tests {
