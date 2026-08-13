@@ -1,4 +1,4 @@
-//! SI (base-10) and binary (base-2) unit prefixes, and the shared [`ScaleFactor`]
+//! Nominal (base-10) and binary (base-2) unit prefixes, and the shared [`ScaleFactor`]
 //! trait used to compute their numeric scale.
 
 use std::str::FromStr;
@@ -7,9 +7,9 @@ use std::str::FromStr;
 #[derive(Debug)]
 pub struct ParsePrefixError;
 
-/// SI prefixes defined with base-10.
+/// Nominal (SI) prefixes defined with base-10.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-pub enum SIPrefix {
+pub enum NominalPrefix {
     /// Value of 10^30
     Quetta,
     /// Value of 10^27
@@ -79,37 +79,37 @@ pub enum BinaryPrefix {
     Yobi,
 }
 
-/// Parses a prefix name (case-insensitive), e.g. `"kilo"` or `"KILO"` → [`SIPrefix::Kilo`].
+/// Parses a prefix name (case-insensitive), e.g. `"kilo"` or `"KILO"` → [`NominalPrefix::Kilo`].
 ///
 /// # Errors
-/// Returns [`ParsePrefixError`] if `s` does not match any known SI prefix.
-impl FromStr for SIPrefix {
+/// Returns [`ParsePrefixError`] if `s` does not match any known nominal prefix.
+impl FromStr for NominalPrefix {
     type Err = ParsePrefixError;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.to_lowercase().as_str() {
-            "quetta" => Ok(SIPrefix::Quetta),
-            "ronna" => Ok(SIPrefix::Ronna),
-            "yotta" => Ok(SIPrefix::Yotta),
-            "zetta" => Ok(SIPrefix::Zetta),
-            "exa" => Ok(SIPrefix::Exa),
-            "peta" => Ok(SIPrefix::Peta),
-            "tera" => Ok(SIPrefix::Tera),
-            "giga" => Ok(SIPrefix::Giga),
-            "mega" => Ok(SIPrefix::Mega),
-            "kilo" => Ok(SIPrefix::Kilo),
-            "hecto" => Ok(SIPrefix::Hecto),
-            "deca" => Ok(SIPrefix::Deca),
-            "deci" => Ok(SIPrefix::Deci),
-            "centi" => Ok(SIPrefix::Centi),
-            "milli" => Ok(SIPrefix::Milli),
-            "micro" => Ok(SIPrefix::Micro),
-            "nano" => Ok(SIPrefix::Nano),
-            "pico" => Ok(SIPrefix::Pico),
-            "femto" => Ok(SIPrefix::Femto),
-            "atto" => Ok(SIPrefix::Atto),
-            "zepto" => Ok(SIPrefix::Zepto),
-            "ronto" => Ok(SIPrefix::Ronto),
-            "quecto" => Ok(SIPrefix::Quecto),
+            "quetta" => Ok(NominalPrefix::Quetta),
+            "ronna" => Ok(NominalPrefix::Ronna),
+            "yotta" => Ok(NominalPrefix::Yotta),
+            "zetta" => Ok(NominalPrefix::Zetta),
+            "exa" => Ok(NominalPrefix::Exa),
+            "peta" => Ok(NominalPrefix::Peta),
+            "tera" => Ok(NominalPrefix::Tera),
+            "giga" => Ok(NominalPrefix::Giga),
+            "mega" => Ok(NominalPrefix::Mega),
+            "kilo" => Ok(NominalPrefix::Kilo),
+            "hecto" => Ok(NominalPrefix::Hecto),
+            "deca" => Ok(NominalPrefix::Deca),
+            "deci" => Ok(NominalPrefix::Deci),
+            "centi" => Ok(NominalPrefix::Centi),
+            "milli" => Ok(NominalPrefix::Milli),
+            "micro" => Ok(NominalPrefix::Micro),
+            "nano" => Ok(NominalPrefix::Nano),
+            "pico" => Ok(NominalPrefix::Pico),
+            "femto" => Ok(NominalPrefix::Femto),
+            "atto" => Ok(NominalPrefix::Atto),
+            "zepto" => Ok(NominalPrefix::Zepto),
+            "ronto" => Ok(NominalPrefix::Ronto),
+            "quecto" => Ok(NominalPrefix::Quecto),
             _ => Err(ParsePrefixError),
         }
     }
@@ -138,7 +138,7 @@ impl FromStr for BinaryPrefix {
 
 /// Trait allowing a prefix to be converted into a numeric scale factor.
 ///
-/// Implemented by both [`SIPrefix`] and [`BinaryPrefix`] to allow both enums to be
+/// Implemented by both [`NominalPrefix`] and [`BinaryPrefix`] to allow both enums to be
 /// handled generically.
 pub trait ScaleFactor {
     /// Returns the multiplicative scale as an `f64`.
@@ -147,32 +147,32 @@ pub trait ScaleFactor {
     fn factor(&self) -> f64;
 }
 
-impl ScaleFactor for SIPrefix {
+impl ScaleFactor for NominalPrefix {
     fn factor(&self) -> f64 {
         match self {
-            SIPrefix::Quetta => 1_000_000_000_000_000_000_000_000_000_000.0,
-            SIPrefix::Ronna => 1_000_000_000_000_000_000_000_000_000.0,
-            SIPrefix::Yotta => 1_000_000_000_000_000_000_000_000.0,
-            SIPrefix::Zetta => 1_000_000_000_000_000_000_000.0,
-            SIPrefix::Exa => 1_000_000_000_000_000_000.0,
-            SIPrefix::Peta => 1_000_000_000_000_000.0,
-            SIPrefix::Tera => 1_000_000_000_000.0,
-            SIPrefix::Giga => 1_000_000_000.0,
-            SIPrefix::Mega => 1_000_000.0,
-            SIPrefix::Kilo => 1_000.0,
-            SIPrefix::Hecto => 100.0,
-            SIPrefix::Deca => 10.0,
-            SIPrefix::Deci => 0.1,
-            SIPrefix::Centi => 0.01,
-            SIPrefix::Milli => 0.001,
-            SIPrefix::Micro => 0.000_001,
-            SIPrefix::Nano => 0.000_000_001,
-            SIPrefix::Pico => 0.000_000_000_001,
-            SIPrefix::Femto => 0.000_000_000_000_001,
-            SIPrefix::Atto => 0.000_000_000_000_000_001,
-            SIPrefix::Zepto => 0.000_000_000_000_000_000_001,
-            SIPrefix::Ronto => 0.000_000_000_000_000_000_000_001,
-            SIPrefix::Quecto => 0.000_000_000_000_000_000_000_000_001,
+            NominalPrefix::Quetta => 1_000_000_000_000_000_000_000_000_000_000.0,
+            NominalPrefix::Ronna => 1_000_000_000_000_000_000_000_000_000.0,
+            NominalPrefix::Yotta => 1_000_000_000_000_000_000_000_000.0,
+            NominalPrefix::Zetta => 1_000_000_000_000_000_000_000.0,
+            NominalPrefix::Exa => 1_000_000_000_000_000_000.0,
+            NominalPrefix::Peta => 1_000_000_000_000_000.0,
+            NominalPrefix::Tera => 1_000_000_000_000.0,
+            NominalPrefix::Giga => 1_000_000_000.0,
+            NominalPrefix::Mega => 1_000_000.0,
+            NominalPrefix::Kilo => 1_000.0,
+            NominalPrefix::Hecto => 100.0,
+            NominalPrefix::Deca => 10.0,
+            NominalPrefix::Deci => 0.1,
+            NominalPrefix::Centi => 0.01,
+            NominalPrefix::Milli => 0.001,
+            NominalPrefix::Micro => 0.000_001,
+            NominalPrefix::Nano => 0.000_000_001,
+            NominalPrefix::Pico => 0.000_000_000_001,
+            NominalPrefix::Femto => 0.000_000_000_000_001,
+            NominalPrefix::Atto => 0.000_000_000_000_000_001,
+            NominalPrefix::Zepto => 0.000_000_000_000_000_000_001,
+            NominalPrefix::Ronto => 0.000_000_000_000_000_000_000_001,
+            NominalPrefix::Quecto => 0.000_000_000_000_000_000_000_000_001,
         }
     }
 }
@@ -199,29 +199,29 @@ mod tests {
 
     #[test]
     fn base_10_scale_factor() {
-        assert_relative_eq!(SIPrefix::Quetta.factor(), 10.0_f64.powi(30));
-        assert_relative_eq!(SIPrefix::Ronna.factor(), 10.0_f64.powi(27));
-        assert_relative_eq!(SIPrefix::Yotta.factor(), 10.0_f64.powi(24));
-        assert_relative_eq!(SIPrefix::Zetta.factor(), 10.0_f64.powi(21));
-        assert_relative_eq!(SIPrefix::Exa.factor(), 10.0_f64.powi(18));
-        assert_relative_eq!(SIPrefix::Peta.factor(), 10.0_f64.powi(15));
-        assert_relative_eq!(SIPrefix::Tera.factor(), 10.0_f64.powi(12));
-        assert_relative_eq!(SIPrefix::Giga.factor(), 10.0_f64.powi(9));
-        assert_relative_eq!(SIPrefix::Mega.factor(), 10.0_f64.powi(6));
-        assert_relative_eq!(SIPrefix::Kilo.factor(), 10.0_f64.powi(3));
-        assert_relative_eq!(SIPrefix::Hecto.factor(), 10.0_f64.powi(2));
-        assert_relative_eq!(SIPrefix::Deca.factor(), 10.0_f64.powi(1));
-        assert_relative_eq!(SIPrefix::Deci.factor(), 10.0_f64.powi(-1));
-        assert_relative_eq!(SIPrefix::Centi.factor(), 10.0_f64.powi(-2));
-        assert_relative_eq!(SIPrefix::Milli.factor(), 10.0_f64.powi(-3));
-        assert_relative_eq!(SIPrefix::Micro.factor(), 10.0_f64.powi(-6));
-        assert_relative_eq!(SIPrefix::Nano.factor(), 10.0_f64.powi(-9));
-        assert_relative_eq!(SIPrefix::Pico.factor(), 10.0_f64.powi(-12));
-        assert_relative_eq!(SIPrefix::Femto.factor(), 10.0_f64.powi(-15));
-        assert_relative_eq!(SIPrefix::Atto.factor(), 10.0_f64.powi(-18));
-        assert_relative_eq!(SIPrefix::Zepto.factor(), 10.0_f64.powi(-21));
-        assert_relative_eq!(SIPrefix::Ronto.factor(), 10.0_f64.powi(-27));
-        assert_relative_eq!(SIPrefix::Quecto.factor(), 10.0_f64.powi(-30));
+        assert_relative_eq!(NominalPrefix::Quetta.factor(), 10.0_f64.powi(30));
+        assert_relative_eq!(NominalPrefix::Ronna.factor(), 10.0_f64.powi(27));
+        assert_relative_eq!(NominalPrefix::Yotta.factor(), 10.0_f64.powi(24));
+        assert_relative_eq!(NominalPrefix::Zetta.factor(), 10.0_f64.powi(21));
+        assert_relative_eq!(NominalPrefix::Exa.factor(), 10.0_f64.powi(18));
+        assert_relative_eq!(NominalPrefix::Peta.factor(), 10.0_f64.powi(15));
+        assert_relative_eq!(NominalPrefix::Tera.factor(), 10.0_f64.powi(12));
+        assert_relative_eq!(NominalPrefix::Giga.factor(), 10.0_f64.powi(9));
+        assert_relative_eq!(NominalPrefix::Mega.factor(), 10.0_f64.powi(6));
+        assert_relative_eq!(NominalPrefix::Kilo.factor(), 10.0_f64.powi(3));
+        assert_relative_eq!(NominalPrefix::Hecto.factor(), 10.0_f64.powi(2));
+        assert_relative_eq!(NominalPrefix::Deca.factor(), 10.0_f64.powi(1));
+        assert_relative_eq!(NominalPrefix::Deci.factor(), 10.0_f64.powi(-1));
+        assert_relative_eq!(NominalPrefix::Centi.factor(), 10.0_f64.powi(-2));
+        assert_relative_eq!(NominalPrefix::Milli.factor(), 10.0_f64.powi(-3));
+        assert_relative_eq!(NominalPrefix::Micro.factor(), 10.0_f64.powi(-6));
+        assert_relative_eq!(NominalPrefix::Nano.factor(), 10.0_f64.powi(-9));
+        assert_relative_eq!(NominalPrefix::Pico.factor(), 10.0_f64.powi(-12));
+        assert_relative_eq!(NominalPrefix::Femto.factor(), 10.0_f64.powi(-15));
+        assert_relative_eq!(NominalPrefix::Atto.factor(), 10.0_f64.powi(-18));
+        assert_relative_eq!(NominalPrefix::Zepto.factor(), 10.0_f64.powi(-21));
+        assert_relative_eq!(NominalPrefix::Ronto.factor(), 10.0_f64.powi(-27));
+        assert_relative_eq!(NominalPrefix::Quecto.factor(), 10.0_f64.powi(-30));
     }
 
     #[test]
@@ -238,11 +238,11 @@ mod tests {
 
     #[test]
     fn prefix_str_parsing() {
-        // SI Prefix
-        let prefix: SIPrefix = "KILO".parse().unwrap();
-        assert_eq!(prefix, SIPrefix::Kilo);
-        let prefix = SIPrefix::from_str("meGA").unwrap();
-        assert_eq!(prefix, SIPrefix::Mega);
+        // Nominal Prefix
+        let prefix: NominalPrefix = "KILO".parse().unwrap();
+        assert_eq!(prefix, NominalPrefix::Kilo);
+        let prefix = NominalPrefix::from_str("meGA").unwrap();
+        assert_eq!(prefix, NominalPrefix::Mega);
 
         // BinPrefix
         let prefix: BinaryPrefix = "kibi".parse().unwrap();
@@ -251,7 +251,7 @@ mod tests {
         assert_eq!(prefix, BinaryPrefix::Mebi);
 
         // Errors
-        let result = SIPrefix::from_str("invalid");
+        let result = NominalPrefix::from_str("invalid");
         assert!(result.is_err());
         let result = BinaryPrefix::from_str("invalid");
         assert!(result.is_err());
