@@ -68,6 +68,7 @@ pub enum BaseUnit {
 /// **Examples**
 /// `liter` -> cubic decimeter (`\deci\meter\tothe{3}`)
 /// `byte`  -> four (4) bits
+// todo: Implement traits for this enum
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum DerivedUnit {
     /// Derived unit for **binary information**, defined as 2^2 (four) bits and represented
@@ -88,11 +89,11 @@ pub enum DerivedUnit {
 /// Trait to simplify any unit to its base unit.
 /// The result of the simplification is the member of the [`BaseUnit`] enum together with
 /// the scale factor from the original unit to its base unit.
-///
-/// todo: modify for those derived units that use multiple base units.
+// todo: modify for those derived units that use multiple base units.
 pub trait UnitSimplify {
     fn to_base_unit(&self) -> (BaseUnit, f64);
 }
+
 
 // -------------------------------------------------------------------
 //                  Traits implementation for the enums
@@ -147,6 +148,10 @@ impl FromStr for BaseUnit {
 #[cfg(test)]
 mod test {
     use super::*;
+
+    // todo: add test cases for the derived units:
+    //   - Parsing units from input strings
+    //   - Converting units to base units
 
     #[test]
     fn base_si_unit_parsing() {
