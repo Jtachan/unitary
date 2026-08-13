@@ -2,33 +2,44 @@
 
 use std::str::FromStr;
 
-/// Enumeration for all base units at the SI.
+/// Enumeration for all base units.
 ///
-/// All the members of this enumeration are named in singular and after the names
-/// stated at the international [BIPM SI Brochure](https://www.bipm.org/en/publications/si-brochure).
+/// `unitary` defines as "base unit" any that cannot be simplified in terms of other units.
+/// All other derived units can then be simplified related to the units in this enumeration,
+/// holding only SI units (defined at the international
+/// [BIPM SI Brochure](https://www.bipm.org/en/publications/si-brochure)).
+///
+/// All members of this enumeration are named in singular and after the names stated at
+/// the [BIPM SI Brochure](https://www.bipm.org/en/publications/si-brochure).
 /// Any unique feature is explained at the member's description.
+///
+/// This enumeration holds more units than the base units defined at the SI brochure, expanding
+/// the definition of some units as "base unit" as a unit that cannot be simplified anymore or
+/// its simplification might lack of further meaning.
+/// The 'radian' (with the simplification `rad = m/m`) is the example of one of them, where its
+/// simplification without further meaning would not bring more clarification to the unit.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-pub enum BaseSIUnit {
-    /// Unit for time, represented with the unit symbol `s`.
+pub enum BaseUnit {
+    /// SI unit for **time**, represented with the unit symbol `s`.
     Second,
-    /// Unit for length, represented with the unit the symbol `m`.
+    /// SI unit for **length**, represented with the unit the symbol `m`.
     /// The notation is defined as "metre" and not "meter" as that is the way defined in the
     /// [BIPM SI Brochure](https://www.bipm.org/en/publications/si-brochure).
     Metre,
-    /// Unit for mass, represented with the unit the symbol `g`.
+    /// SI unit for **mass**, represented with the unit the symbol `g`.
     /// Gram is used instead of 'Kilogram' (SI defined base unit for mass in the
     /// [BIPM SI Brochure](https://www.bipm.org/en/publications/si-brochure)) for
     /// simplification purposes.
     Gram,
-    /// Unit for electric current, represented with the unit the symbol `A`.
+    /// SI unit for **electric current**, represented with the unit the symbol `A`.
     Ampere,
-    /// Unit for thermodynamic temperature, represented with the unit the symbol `T`.
+    /// SI unit for **thermodynamic temperature**, represented with the unit the symbol `T`.
     Kelvin,
-    /// Unit for amount of substance, represented with the unit the symbol `mol`.
+    /// SI unit for **amount of substance**, represented with the unit the symbol `mol`.
     Mole,
-    /// Unit for luminous intensity (luminosity), represented with the unit the symbol `cd`.
+    /// SI unit for **luminous intensity (luminosity)**, represented with the unit the symbol `cd`.
     Candela,
-    /// Unit for adimensional quantities, without a symbol to represent.
+    /// Unit for **adimensional quantities**, without a symbol to represent.
     /// This member cannot be defined together with any prefix.
     One,
     /// Unit for **phase angles**, represented with the symbol `rad`.
@@ -57,23 +68,23 @@ pub struct ParseUnitError {
 /// - `"adimensional"` for one
 ///
 /// # Examples
-/// `"Second"` -> [`BaseSIUnit::Second`]
-/// `"time"` -> [`BaseSIUnit::Second`]
+/// `"Second"` -> [`BaseUnit::Second`]
+/// `"time"` -> [`BaseUnit::Second`]
 ///
 /// # Errors
 /// Returns [`ParseUnitError`] if `s` does not match with either
-impl FromStr for BaseSIUnit {
+impl FromStr for BaseUnit {
     type Err = ParseUnitError;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.to_lowercase().as_str() {
-            "second" | "time" => Ok(BaseSIUnit::Second),
-            "metre" | "length" => Ok(BaseSIUnit::Metre),
-            "gram" | "mass" => Ok(BaseSIUnit::Gram),
-            "ampere" | "current" => Ok(BaseSIUnit::Ampere),
-            "kelvin" | "temperature" => Ok(BaseSIUnit::Kelvin),
-            "mole" | "substance" => Ok(BaseSIUnit::Mole),
-            "candela" | "luminosity" => Ok(BaseSIUnit::Candela),
-            "one" | "adimensional" => Ok(BaseSIUnit::One),
+            "second" | "time" => Ok(BaseUnit::Second),
+            "metre" | "length" => Ok(BaseUnit::Metre),
+            "gram" | "mass" => Ok(BaseUnit::Gram),
+            "ampere" | "current" => Ok(BaseUnit::Ampere),
+            "kelvin" | "temperature" => Ok(BaseUnit::Kelvin),
+            "mole" | "substance" => Ok(BaseUnit::Mole),
+            "candela" | "luminosity" => Ok(BaseUnit::Candela),
+            "one" | "adimensional" => Ok(BaseUnit::One),
             _ => Err(ParseUnitError {
                 // Todo: Use the error for panicking at user level.
                 _message: format!(
@@ -105,12 +116,12 @@ mod test {
         ];
 
         for (unit, quantity) in si_unit_names.iter() {
-            let base_unit: BaseSIUnit = unit.parse().unwrap();
-            let base_quantity = BaseSIUnit::from_str(quantity).unwrap();
+            let base_unit: BaseUnit = unit.parse().unwrap();
+            let base_quantity = BaseUnit::from_str(quantity).unwrap();
             assert_eq!(base_unit, base_quantity);
         }
 
-        let result = BaseSIUnit::from_str("meter");
+        let result = BaseUnit::from_str("meter");
         assert!(result.is_err());
     }
 }
