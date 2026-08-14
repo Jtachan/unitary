@@ -94,7 +94,6 @@ pub trait UnitSimplify {
     fn to_base_unit(&self) -> (BaseUnit, f64);
 }
 
-
 // -------------------------------------------------------------------
 //                  Traits implementation for the enums
 // -------------------------------------------------------------------
