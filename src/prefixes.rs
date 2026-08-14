@@ -261,45 +261,71 @@ impl Display for BinaryPrefix {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use approx::assert_relative_eq;
 
     #[test]
     fn base_10_scale_factor() {
-        assert_relative_eq!(NominalPrefix::Quetta.factor(), 10.0_f64.powi(30));
-        assert_relative_eq!(NominalPrefix::Ronna.factor(), 10.0_f64.powi(27));
-        assert_relative_eq!(NominalPrefix::Yotta.factor(), 10.0_f64.powi(24));
-        assert_relative_eq!(NominalPrefix::Zetta.factor(), 10.0_f64.powi(21));
-        assert_relative_eq!(NominalPrefix::Exa.factor(), 10.0_f64.powi(18));
-        assert_relative_eq!(NominalPrefix::Peta.factor(), 10.0_f64.powi(15));
-        assert_relative_eq!(NominalPrefix::Tera.factor(), 10.0_f64.powi(12));
-        assert_relative_eq!(NominalPrefix::Giga.factor(), 10.0_f64.powi(9));
-        assert_relative_eq!(NominalPrefix::Mega.factor(), 10.0_f64.powi(6));
-        assert_relative_eq!(NominalPrefix::Kilo.factor(), 10.0_f64.powi(3));
-        assert_relative_eq!(NominalPrefix::Hecto.factor(), 10.0_f64.powi(2));
-        assert_relative_eq!(NominalPrefix::Deca.factor(), 10.0_f64.powi(1));
-        assert_relative_eq!(NominalPrefix::Deci.factor(), 10.0_f64.powi(-1));
-        assert_relative_eq!(NominalPrefix::Centi.factor(), 10.0_f64.powi(-2));
-        assert_relative_eq!(NominalPrefix::Milli.factor(), 10.0_f64.powi(-3));
-        assert_relative_eq!(NominalPrefix::Micro.factor(), 10.0_f64.powi(-6));
-        assert_relative_eq!(NominalPrefix::Nano.factor(), 10.0_f64.powi(-9));
-        assert_relative_eq!(NominalPrefix::Pico.factor(), 10.0_f64.powi(-12));
-        assert_relative_eq!(NominalPrefix::Femto.factor(), 10.0_f64.powi(-15));
-        assert_relative_eq!(NominalPrefix::Atto.factor(), 10.0_f64.powi(-18));
-        assert_relative_eq!(NominalPrefix::Zepto.factor(), 10.0_f64.powi(-21));
-        assert_relative_eq!(NominalPrefix::Ronto.factor(), 10.0_f64.powi(-27));
-        assert_relative_eq!(NominalPrefix::Quecto.factor(), 10.0_f64.powi(-30));
+        // Declaring an array to check there is no missing value above. SI declares 24 prefixes.
+        let prefix_and_exponent: [(NominalPrefix, i32); 24] = [
+            (NominalPrefix::Quetta, 30),
+            (NominalPrefix::Ronna, 27),
+            (NominalPrefix::Yotta, 24),
+            (NominalPrefix::Zetta, 21),
+            (NominalPrefix::Exa, 18),
+            (NominalPrefix::Peta, 15),
+            (NominalPrefix::Tera, 12),
+            (NominalPrefix::Giga, 9),
+            (NominalPrefix::Mega, 6),
+            (NominalPrefix::Kilo, 3),
+            (NominalPrefix::Hecto, 2),
+            (NominalPrefix::Deca, 1),
+            (NominalPrefix::Deci, -1),
+            (NominalPrefix::Centi, -2),
+            (NominalPrefix::Milli, -3),
+            (NominalPrefix::Micro, -6),
+            (NominalPrefix::Nano, -9),
+            (NominalPrefix::Pico, -12),
+            (NominalPrefix::Femto, -15),
+            (NominalPrefix::Atto, -18),
+            (NominalPrefix::Zepto, -21),
+            (NominalPrefix::Yocto, -24),
+            (NominalPrefix::Ronto, -27),
+            (NominalPrefix::Quecto, -30),
+        ];
+
+        for (prefix, exponent) in prefix_and_exponent.iter() {
+            assert!(
+                prefix.factor() > 0.0,
+                "Prefix '{}' has a null (0.0) factor",
+                prefix
+            );
+            assert!(
+                (prefix.factor() - 10.0_f64.powi(*exponent)).abs() < 1e-30,
+                "Prefix '{}' failed",
+                prefix
+            );
+        }
     }
 
     #[test]
     fn base_2_scale_factor() {
-        assert_relative_eq!(BinaryPrefix::Kibi.factor(), 2.0_f64.powi(10));
-        assert_relative_eq!(BinaryPrefix::Mebi.factor(), 2.0_f64.powi(20));
-        assert_relative_eq!(BinaryPrefix::Gibi.factor(), 2.0_f64.powi(30));
-        assert_relative_eq!(BinaryPrefix::Tebi.factor(), 2.0_f64.powi(40));
-        assert_relative_eq!(BinaryPrefix::Pebi.factor(), 2.0_f64.powi(50));
-        assert_relative_eq!(BinaryPrefix::Exbi.factor(), 2.0_f64.powi(60));
-        assert_relative_eq!(BinaryPrefix::Zebi.factor(), 2.0_f64.powi(70));
-        assert_relative_eq!(BinaryPrefix::Yobi.factor(), 2.0_f64.powi(80));
+        let prefix_and_exponent: [(BinaryPrefix, i32); 8] = [
+            (BinaryPrefix::Kibi, 10),
+            (BinaryPrefix::Mebi, 20),
+            (BinaryPrefix::Gibi, 30),
+            (BinaryPrefix::Tebi, 40),
+            (BinaryPrefix::Pebi, 50),
+            (BinaryPrefix::Exbi, 60),
+            (BinaryPrefix::Zebi, 70),
+            (BinaryPrefix::Yobi, 80),
+        ];
+
+        for (prefix, exponent) in prefix_and_exponent.iter() {
+            assert!(
+                (prefix.factor() - 2.0_f64.powi(*exponent)).abs() < 1e-2,
+                "Prefix '{}' failed",
+                prefix
+            );
+        }
     }
 
     #[test]
