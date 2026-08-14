@@ -1,7 +1,6 @@
 //! Nominal (base-10) and binary (base-2) unit prefixes, and the shared [`ScaleFactor`]
 //! trait used to compute their numeric scale.
 
-use std::fmt::{Display, Formatter};
 use std::str::FromStr;
 
 /// Error returned when a parsed string does not match any known prefix name.
@@ -84,6 +83,56 @@ pub enum BinaryPrefix {
     Zebi,
     /// Value of 2^80 = 1024^8
     Yobi,
+}
+
+// -------------------------------------------------------------------
+//                        Extra functions per enums
+// -------------------------------------------------------------------
+
+impl NominalPrefix {
+    pub fn as_str(&self) -> &str {
+        match &self {
+            NominalPrefix::Quetta => "quetta",
+            NominalPrefix::Ronna => "ronna",
+            NominalPrefix::Yotta => "yotta",
+            NominalPrefix::Zetta => "zetta",
+            NominalPrefix::Exa => "exa",
+            NominalPrefix::Peta => "peta",
+            NominalPrefix::Tera => "tera",
+            NominalPrefix::Giga => "giga",
+            NominalPrefix::Mega => "mega",
+            NominalPrefix::Kilo => "kilo",
+            NominalPrefix::Hecto => "hecto",
+            NominalPrefix::Deca => "deca",
+            NominalPrefix::Deci => "deci",
+            NominalPrefix::Centi => "centi",
+            NominalPrefix::Milli => "milli",
+            NominalPrefix::Micro => "micro",
+            NominalPrefix::Nano => "nano",
+            NominalPrefix::Pico => "pico",
+            NominalPrefix::Femto => "femto",
+            NominalPrefix::Atto => "atto",
+            NominalPrefix::Zepto => "zepto",
+            NominalPrefix::Yocto => "yocto",
+            NominalPrefix::Ronto => "ronto",
+            NominalPrefix::Quecto => "quecto",
+        }
+    }
+}
+
+impl BinaryPrefix {
+    pub fn as_str(&self) -> &str {
+        match &self {
+            BinaryPrefix::Kibi => "kibi",
+            BinaryPrefix::Mebi => "mebi",
+            BinaryPrefix::Gibi => "gibi",
+            BinaryPrefix::Tebi => "tebi",
+            BinaryPrefix::Pebi => "pebi",
+            BinaryPrefix::Exbi => "exbi",
+            BinaryPrefix::Zebi => "zebi",
+            BinaryPrefix::Yobi => "yobi",
+        }
+    }
 }
 
 // -------------------------------------------------------------------
@@ -208,52 +257,6 @@ impl ScaleFactor for BinaryPrefix {
     }
 }
 
-impl Display for NominalPrefix {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        match &self {
-            NominalPrefix::Quetta => write!(f, "Quetta"),
-            NominalPrefix::Ronna => write!(f, "Ronna"),
-            NominalPrefix::Yotta => write!(f, "Yotta"),
-            NominalPrefix::Zetta => write!(f, "Zetta"),
-            NominalPrefix::Exa => write!(f, "Exa"),
-            NominalPrefix::Peta => write!(f, "Peta"),
-            NominalPrefix::Tera => write!(f, "Tera"),
-            NominalPrefix::Giga => write!(f, "Giga"),
-            NominalPrefix::Mega => write!(f, "Mega"),
-            NominalPrefix::Kilo => write!(f, "Kilo"),
-            NominalPrefix::Hecto => write!(f, "Hecto"),
-            NominalPrefix::Deca => write!(f, "Deca"),
-            NominalPrefix::Deci => write!(f, "Deci"),
-            NominalPrefix::Centi => write!(f, "Centi"),
-            NominalPrefix::Milli => write!(f, "Milli"),
-            NominalPrefix::Micro => write!(f, "Micro"),
-            NominalPrefix::Nano => write!(f, "Nano"),
-            NominalPrefix::Pico => write!(f, "Pico"),
-            NominalPrefix::Femto => write!(f, "Femto"),
-            NominalPrefix::Atto => write!(f, "Atto"),
-            NominalPrefix::Zepto => write!(f, "Zepto"),
-            NominalPrefix::Yocto => write!(f, "Yocto"),
-            NominalPrefix::Ronto => write!(f, "Ronto"),
-            NominalPrefix::Quecto => write!(f, "Quecto"),
-        }
-    }
-}
-
-impl Display for BinaryPrefix {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        match &self {
-            BinaryPrefix::Kibi => write!(f, "Kibi"),
-            BinaryPrefix::Mebi => write!(f, "Mebi"),
-            BinaryPrefix::Gibi => write!(f, "Gibi"),
-            BinaryPrefix::Tebi => write!(f, "Tebi"),
-            BinaryPrefix::Pebi => write!(f, "Pebi"),
-            BinaryPrefix::Exbi => write!(f, "Exbi"),
-            BinaryPrefix::Zebi => write!(f, "Zebi"),
-            BinaryPrefix::Yobi => write!(f, "Yobi"),
-        }
-    }
-}
-
 // -------------------------------------------------------------------
 //                                 Tests
 // -------------------------------------------------------------------
@@ -296,12 +299,12 @@ mod tests {
             assert!(
                 prefix.factor() > 0.0,
                 "Prefix '{}' has a null (0.0) factor",
-                prefix
+                prefix.as_str().to_uppercase()
             );
             assert!(
                 (prefix.factor() - 10.0_f64.powi(*exponent)).abs() < 1e-30,
                 "Prefix '{}' does not match its factor!",
-                prefix
+                prefix.as_str().to_uppercase()
             );
         }
     }
@@ -323,7 +326,7 @@ mod tests {
             assert!(
                 (prefix.factor() - 2.0_f64.powi(*exponent)).abs() < 1e-2,
                 "Prefix '{}' failed",
-                prefix
+                prefix.as_str().to_uppercase()
             );
         }
     }
