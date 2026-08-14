@@ -56,6 +56,8 @@ pub enum NominalPrefix {
     Atto,
     /// Value of 10^-21
     Zepto,
+    /// Value of 10^-24
+    Yocto,
     /// Value of 10^-27
     Ronto,
     /// Value of 10^-30
@@ -183,8 +185,9 @@ impl ScaleFactor for NominalPrefix {
             NominalPrefix::Femto => 0.000_000_000_000_001,
             NominalPrefix::Atto => 0.000_000_000_000_000_001,
             NominalPrefix::Zepto => 0.000_000_000_000_000_000_001,
-            NominalPrefix::Ronto => 0.000_000_000_000_000_000_000_001,
-            NominalPrefix::Quecto => 0.000_000_000_000_000_000_000_000_001,
+            NominalPrefix::Yocto => 0.000_000_000_000_000_000_000_001,
+            NominalPrefix::Ronto => 0.000_000_000_000_000_000_000_000_001,
+            NominalPrefix::Quecto => 0.000_000_000_000_000_000_000_000_000_001,
         }
     }
 }
