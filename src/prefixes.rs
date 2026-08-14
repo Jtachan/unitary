@@ -1,6 +1,7 @@
 //! Nominal (base-10) and binary (base-2) unit prefixes, and the shared [`ScaleFactor`]
 //! trait used to compute their numeric scale.
 
+use std::fmt::{Display, Formatter};
 use std::str::FromStr;
 
 /// Error returned when a parsed string does not match any known prefix name.
@@ -203,6 +204,52 @@ impl ScaleFactor for BinaryPrefix {
             BinaryPrefix::Exbi => 1152921504606846976.0,
             BinaryPrefix::Zebi => 1180591620717411303424.0,
             BinaryPrefix::Yobi => 1208925819614629174706176.0,
+        }
+    }
+}
+
+impl Display for NominalPrefix {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match &self {
+            NominalPrefix::Quetta => write!(f, "Quetta"),
+            NominalPrefix::Ronna => write!(f, "Ronna"),
+            NominalPrefix::Yotta => write!(f, "Yotta"),
+            NominalPrefix::Zetta => write!(f, "Zetta"),
+            NominalPrefix::Exa => write!(f, "Exa"),
+            NominalPrefix::Peta => write!(f, "Peta"),
+            NominalPrefix::Tera => write!(f, "Tera"),
+            NominalPrefix::Giga => write!(f, "Giga"),
+            NominalPrefix::Mega => write!(f, "Mega"),
+            NominalPrefix::Kilo => write!(f, "Kilo"),
+            NominalPrefix::Hecto => write!(f, "Hecto"),
+            NominalPrefix::Deca => write!(f, "Deca"),
+            NominalPrefix::Deci => write!(f, "Deci"),
+            NominalPrefix::Centi => write!(f, "Centi"),
+            NominalPrefix::Milli => write!(f, "Milli"),
+            NominalPrefix::Micro => write!(f, "Micro"),
+            NominalPrefix::Nano => write!(f, "Nano"),
+            NominalPrefix::Pico => write!(f, "Pico"),
+            NominalPrefix::Femto => write!(f, "Femto"),
+            NominalPrefix::Atto => write!(f, "Atto"),
+            NominalPrefix::Zepto => write!(f, "Zepto"),
+            NominalPrefix::Yocto => write!(f, "Yocto"),
+            NominalPrefix::Ronto => write!(f, "Ronto"),
+            NominalPrefix::Quecto => write!(f, "Quecto"),
+        }
+    }
+}
+
+impl Display for BinaryPrefix {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match &self {
+            BinaryPrefix::Kibi => write!(f, "Kibi"),
+            BinaryPrefix::Mebi => write!(f, "Mebi"),
+            BinaryPrefix::Gibi => write!(f, "Gibi"),
+            BinaryPrefix::Tebi => write!(f, "Tebi"),
+            BinaryPrefix::Pebi => write!(f, "Pebi"),
+            BinaryPrefix::Exbi => write!(f, "Exbi"),
+            BinaryPrefix::Zebi => write!(f, "Zebi"),
+            BinaryPrefix::Yobi => write!(f, "Yobi"),
         }
     }
 }
