@@ -149,7 +149,7 @@ impl FromStr for BaseUnit {
 mod test {
     use super::*;
 
-    // todo: add test cases for the derived units:
+    // todo: add test cases for the derived units.
     //   - Parsing units from input strings
     //   - Converting units to base units
 
@@ -172,7 +172,7 @@ mod test {
             assert_eq!(base_unit, base_quantity);
         }
 
-        let result = BaseUnit::from_str("metre");
+        let result = BaseUnit::from_str("invalid");
         assert!(result.is_err());
     }
 }
