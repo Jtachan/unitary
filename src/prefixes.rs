@@ -300,7 +300,7 @@ mod tests {
             );
             assert!(
                 (prefix.factor() - 10.0_f64.powi(*exponent)).abs() < 1e-30,
-                "Prefix '{}' failed",
+                "Prefix '{}' does not match its factor!",
                 prefix
             );
         }
