@@ -83,6 +83,28 @@ pub enum DerivedUnit {
 }
 
 // -------------------------------------------------------------------
+//                        Extra functions per enums
+// -------------------------------------------------------------------
+
+impl BaseUnit {
+    /// Return the name of the member as a reference to a `str`.
+    pub fn as_str(&self) -> &str {
+        match &self {
+            BaseUnit::Second => "second",
+            BaseUnit::Meter => "meter",
+            BaseUnit::Gram => "gram",
+            BaseUnit::Ampere => "ampere",
+            BaseUnit::Kelvin => "kelvin",
+            BaseUnit::Mole => "mole",
+            BaseUnit::Candela => "candela",
+            BaseUnit::One => "one",
+            BaseUnit::Radian => "radian",
+            BaseUnit::Bit => "bit",
+        }
+    }
+}
+
+// -------------------------------------------------------------------
 //                          Custom trait definitions
 // -------------------------------------------------------------------
 
@@ -168,7 +190,12 @@ mod test {
         for (unit, quantity) in si_unit_names.iter() {
             let base_unit: BaseUnit = unit.parse().unwrap();
             let base_quantity = BaseUnit::from_str(quantity).unwrap();
-            assert_eq!(base_unit, base_quantity);
+            assert_eq!(
+                base_unit,
+                base_quantity,
+                "Failed at unit {}",
+                base_unit.as_str().to_uppercase()
+            );
         }
 
         let result = BaseUnit::from_str("invalid");
