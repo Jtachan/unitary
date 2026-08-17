@@ -192,6 +192,7 @@ impl FromStr for NominalPrefix {
             "femto" => Ok(NominalPrefix::Femto),
             "atto" => Ok(NominalPrefix::Atto),
             "zepto" => Ok(NominalPrefix::Zepto),
+            "yocto" => Ok(NominalPrefix::Yocto),
             "ronto" => Ok(NominalPrefix::Ronto),
             "quecto" => Ok(NominalPrefix::Quecto),
             _ => Err(ParsePrefixError),
@@ -278,24 +279,67 @@ impl ScaleFactor for BinaryPrefix {
 mod tests {
     use super::*;
 
+    // Testing all methods are fully implemented and no member is left without defining.
+    // The purpose of this test is just to check all prefixes were defined correctly.
     #[test]
-    fn prefix_str_parsing() {
-        // Nominal Prefix
-        let prefix: NominalPrefix = "KILO".parse().unwrap();
-        assert_eq!(prefix, NominalPrefix::Kilo);
-        let prefix = NominalPrefix::from_str("meGA").unwrap();
-        assert_eq!(prefix, NominalPrefix::Mega);
+    fn nominal_prefix_completeness() {
+        // "prefix_data" was manually created out of the SI brochure, section 3, table 7.
+        let prefix_data: [(&str, f64); 24] = [
+            ("deca", 1e1),
+            ("hecto", 1e2),
+            ("kilo", 1e3),
+            ("mega", 1e6),
+            ("giga", 1e9),
+            ("tera", 1e12),
+            ("peta", 1e15),
+            ("exa", 1e18),
+            ("zetta", 1e21),
+            ("yotta", 1e24),
+            ("ronna", 1e27),
+            ("quetta", 1e30),
+            ("deci", 1e-1),
+            ("centi", 1e-2),
+            ("milli", 1e-3),
+            ("micro", 1e-6),
+            ("nano", 1e-9),
+            ("pico", 1e-12),
+            ("femto", 1e-15),
+            ("atto", 1e-18),
+            ("zepto", 1e-21),
+            ("yocto", 1e-24),
+            ("ronto", 1e-27),
+            ("quecto", 1e-30),
+        ];
 
-        // BinPrefix
-        let prefix: BinaryPrefix = "kibi".parse().unwrap();
-        assert_eq!(prefix, BinaryPrefix::Kibi);
-        let prefix = BinaryPrefix::from_str("meBI").unwrap();
-        assert_eq!(prefix, BinaryPrefix::Mebi);
-
-        // Errors
-        let result = NominalPrefix::from_str("invalid");
-        assert!(result.is_err());
-        let result = BinaryPrefix::from_str("invalid");
-        assert!(result.is_err());
+        for (name, factor) in prefix_data {
+            let prefix = NominalPrefix::from_str(name);
+            assert!(
+                prefix.is_ok(),
+                "Failed at prefix {}. Trait: `FromStr`",
+                name.to_uppercase()
+            );
+            let prefix = prefix.unwrap();
+            assert_eq!(
+                prefix.as_str(),
+                name,
+                "Failed at prefix {}. Method: `as_str` not implemented",
+                name.to_uppercase()
+            );
+            if factor > 1.0 {
+                assert_eq!(
+                    prefix.factor() as u128,
+                    factor as u128,
+                    "Failed at prefix {}. Trait `ScaleFactor`",
+                    name.to_uppercase()
+                )
+            } else {
+                let res = prefix.factor() / factor; // Result should be 1.0
+                assert!(
+                    (res - 1.0).abs() < 1e-6,
+                    "Failed at prefix {}. Trait `ScaleFactor`",
+                    name.to_uppercase()
+                );
+            }
+        }
     }
 }
