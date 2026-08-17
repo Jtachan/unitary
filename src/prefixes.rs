@@ -216,6 +216,8 @@ impl FromStr for BinaryPrefix {
             "exbi" => Ok(BinaryPrefix::Exbi),
             "zebi" => Ok(BinaryPrefix::Zebi),
             "yobi" => Ok(BinaryPrefix::Yobi),
+            "robi" => Ok(BinaryPrefix::Robi),
+            "quebi" => Ok(BinaryPrefix::Quebi),
             _ => Err(ParsePrefixError),
         }
     }
@@ -340,6 +342,47 @@ mod tests {
                     name.to_uppercase()
                 );
             }
+        }
+    }
+
+    // Testing all methods are fully implemented and no member is left without defining.
+    // The purpose of this test is just to check all prefixes were defined correctly.
+    #[test]
+    fn binary_prefix_completeness() {
+        // "prefix_data" was manually parsed from the SI Brochure, section 3, las paragraph.
+        let prefix_data: [(&str, u128); 10] = [
+            ("kibi", 2_u128.pow(10)),
+            ("mebi", 2_u128.pow(20)),
+            ("gibi", 2_u128.pow(30)),
+            ("tebi", 2_u128.pow(40)),
+            ("pebi", 2_u128.pow(50)),
+            ("exbi", 2_u128.pow(60)),
+            ("zebi", 2_u128.pow(70)),
+            ("yobi", 2_u128.pow(80)),
+            ("robi", 2_u128.pow(90)),
+            ("quebi", 2_u128.pow(100)),
+        ];
+
+        for (name, factor) in prefix_data {
+            let prefix = BinaryPrefix::from_str(name);
+            assert!(
+                prefix.is_ok(),
+                "Failed at prefix {}. Trait: `FromStr`",
+                name.to_uppercase()
+            );
+            let prefix = prefix.unwrap();
+            assert_eq!(
+                prefix.as_str(),
+                name,
+                "Failed at prefix {}. Method: `as_str` not implemented",
+                name.to_uppercase()
+            );
+            assert_eq!(
+                prefix.factor(),
+                factor,
+                "Failed at prefix {}. Trait `ScaleFactor`",
+                name.to_uppercase()
+            )
         }
     }
 }
