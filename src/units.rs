@@ -68,18 +68,62 @@ pub enum BaseUnit {
 /// **Examples**
 /// `liter` -> cubic decimeter (`\deci\meter\tothe{3}`)
 /// `byte`  -> four (4) bits
-// todo: Implement traits for this enum
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum DerivedUnit {
-    /// Derived unit for **binary information**, defined as 2^2 (four) bits and represented
-    /// with the symbol `B`.
+    /// Derived unit for **binary information**, defined as four bits (`2^2 bit`).
+    /// Represented with the symbol `B`.
     Byte,
-    /// Derived unit for **volume**, defined as a cubic decimeter (10^-3 cubic meters) and
+    /// Derived unit for **frequency**, defined as inverse second `s^-1`.
+    /// Represented with the symbol `Hz`.
+    Hertz,
+    /// Derived unit for **force**, defined as `kg * m * s^-2`.
+    /// Represented with the symbol `N`.
+    Newton,
+    /// Derived unit for **pressure**, defined as Newtons per square meter `N / m^2` (or `kg * m^-1 * s^-2`).
+    /// Represented with the symbol `Pa`.
+    Pascal,
+    /// Derived unit for **energy** (amount of heat), defined as Newtons time meters `N * m` (or `kg * m^2 * s^-2`).
+    /// Represented with the symbol `J`.
+    Joule,
+    /// Derived unit for **power**, defined as Joules per second `J / s` (or `kg * m^2 * s^-3`).
+    /// Represented with the symbol `W`.
+    Watt,
+    /// Derived unit for **electric charge**, defined as ampere times second `A * s`
+    /// Represented with the symbol `C`.
+    Coulomb,
+    /// Derived unit for **electric potential difference**, defined as watt per ampere `W / A` (or `kg * m^2 * s^-3 * A^-1`).
+    /// Represented with the symbol `V`.
+    Volt,
+    /// Derived unit for **magnetic flux**, defined as volts times second `V * s`.
+    /// Represented with the symbol `T`.
+    Tesla,
+    /// Derived unit for **temperature**, defined as a difference (offset) of 273.15 Kelvin `273.15 K`.
+    /// Represented with the symbol `°C`.
+    Celsius,
+    /// Derived unit for **time**, defined as 60 seconds `60 s`.
+    /// Represented with the symbol `min`.
+    Minute,
+    /// Derived unit for **time**, defined as 60 minutes `60 min` (or `3_600 s`).
+    /// Represented with the symbol `h`.
+    Hour,
+    /// Derived unit for **time**, defined as 24 hours `24 h` (or `86_400 s`).
+    /// Represented with the symbol `d`.
+    Day,
+    /// Derived unit for **phase angle**, defined as pi/180 radians,
+    /// Represented with the symbol `°`.
+    Degree,
+    /// Derived unit for **area**, defined as one square hectometre `hm^2` (or `10^4 m^2`).
+    /// Represented with the symbol `ha`.
+    Hectare,
+    /// Derived unit for **volume**, defined as a cubic decimeter `dm^3` (10^-3 cubic meters) and
     /// represented with the symbol `L`.
     /// The SI Brochure accepts both symbols `l` and `L` to define liters. In order to avoid
     /// confusion, `unitary` uses the symbol `L` to diferenciate liters from the numeral one (`1`)
     /// and the capital letter `I`, which might look like the lowercase `l` at some fonts.
     Liter,
+    /// Derived unit for **mass**, defined as `10^3 kg`.
+    /// Represented with the symbol `t`.
+    Tonne,
 }
 
 // -------------------------------------------------------------------
