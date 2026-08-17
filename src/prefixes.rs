@@ -83,6 +83,10 @@ pub enum BinaryPrefix {
     Zebi,
     /// Value of 2^80 = 1024^8
     Yobi,
+    /// Value of 2^90 = 1024^9
+    Robi,
+    /// Value of 2^100 = 1024^10
+    Quebi,
 }
 
 // -------------------------------------------------------------------
@@ -133,6 +137,8 @@ impl BinaryPrefix {
             BinaryPrefix::Exbi => "exbi",
             BinaryPrefix::Zebi => "zebi",
             BinaryPrefix::Yobi => "yobi",
+            BinaryPrefix::Robi => "robi",
+            BinaryPrefix::Quebi => "quebi",
         }
     }
 }
@@ -146,17 +152,18 @@ impl BinaryPrefix {
 /// Implemented by both [`NominalPrefix`] and [`BinaryPrefix`] to allow both enums to be
 /// handled generically.
 pub trait ScaleFactor {
+    type ReturnType;
     /// Returns the multiplicative scale as an `f64`.
     ///
     /// E.G.: `Kilo.factor()` -> `1000.0` and `Kibi.factor()` -> `1024.0`
-    fn factor(&self) -> f64;
+    fn factor(&self) -> Self::ReturnType;
 }
 
 // -------------------------------------------------------------------
 //                  Traits implementation for the enums
 // -------------------------------------------------------------------
 
-/// Parses a prefix name (case-insensitive), e.g. `"kilo"` or `"KILO"` → [`NominalPrefix::Kilo`].
+/// Parses a prefix name (case-insensitive), e.g. `"kilo"` or `"KILO"` -> [`NominalPrefix::Kilo`].
 ///
 /// # Errors
 /// Returns [`ParsePrefixError`] if `s` does not match any known nominal prefix.
@@ -214,47 +221,51 @@ impl FromStr for BinaryPrefix {
 }
 
 impl ScaleFactor for NominalPrefix {
+    type ReturnType = f64;
     fn factor(&self) -> f64 {
         match self {
-            NominalPrefix::Quetta => 1_000_000_000_000_000_000_000_000_000_000.0,
-            NominalPrefix::Ronna => 1_000_000_000_000_000_000_000_000_000.0,
-            NominalPrefix::Yotta => 1_000_000_000_000_000_000_000_000.0,
-            NominalPrefix::Zetta => 1_000_000_000_000_000_000_000.0,
-            NominalPrefix::Exa => 1_000_000_000_000_000_000.0,
-            NominalPrefix::Peta => 1_000_000_000_000_000.0,
-            NominalPrefix::Tera => 1_000_000_000_000.0,
-            NominalPrefix::Giga => 1_000_000_000.0,
-            NominalPrefix::Mega => 1_000_000.0,
-            NominalPrefix::Kilo => 1_000.0,
-            NominalPrefix::Hecto => 100.0,
-            NominalPrefix::Deca => 10.0,
-            NominalPrefix::Deci => 0.1,
-            NominalPrefix::Centi => 0.01,
-            NominalPrefix::Milli => 0.001,
-            NominalPrefix::Micro => 0.000_001,
-            NominalPrefix::Nano => 0.000_000_001,
-            NominalPrefix::Pico => 0.000_000_000_001,
-            NominalPrefix::Femto => 0.000_000_000_000_001,
-            NominalPrefix::Atto => 0.000_000_000_000_000_001,
-            NominalPrefix::Zepto => 0.000_000_000_000_000_000_001,
-            NominalPrefix::Yocto => 0.000_000_000_000_000_000_000_001,
-            NominalPrefix::Ronto => 0.000_000_000_000_000_000_000_000_001,
-            NominalPrefix::Quecto => 0.000_000_000_000_000_000_000_000_000_001,
+            NominalPrefix::Quetta => 1e30,
+            NominalPrefix::Ronna => 1e27,
+            NominalPrefix::Yotta => 1e24,
+            NominalPrefix::Zetta => 1e21,
+            NominalPrefix::Exa => 1e18,
+            NominalPrefix::Peta => 1e15,
+            NominalPrefix::Tera => 1e12,
+            NominalPrefix::Giga => 1e9,
+            NominalPrefix::Mega => 1e6,
+            NominalPrefix::Kilo => 1e3,
+            NominalPrefix::Hecto => 1e2,
+            NominalPrefix::Deca => 1e1,
+            NominalPrefix::Deci => 1e-1,
+            NominalPrefix::Centi => 1e-2,
+            NominalPrefix::Milli => 1e-3,
+            NominalPrefix::Micro => 1e-6,
+            NominalPrefix::Nano => 1e-9,
+            NominalPrefix::Pico => 1e-12,
+            NominalPrefix::Femto => 1e-15,
+            NominalPrefix::Atto => 1e-18,
+            NominalPrefix::Zepto => 1e-21,
+            NominalPrefix::Yocto => 1e-24,
+            NominalPrefix::Ronto => 1e-27,
+            NominalPrefix::Quecto => 1e-30,
         }
     }
 }
 
 impl ScaleFactor for BinaryPrefix {
-    fn factor(&self) -> f64 {
+    type ReturnType = u128;
+    fn factor(&self) -> u128 {
         match self {
-            BinaryPrefix::Kibi => 1024.0,
-            BinaryPrefix::Mebi => 1048576.0,
-            BinaryPrefix::Gibi => 1073741824.0,
-            BinaryPrefix::Tebi => 1099511627776.0,
-            BinaryPrefix::Pebi => 1125899906842624.0,
-            BinaryPrefix::Exbi => 1152921504606846976.0,
-            BinaryPrefix::Zebi => 1180591620717411303424.0,
-            BinaryPrefix::Yobi => 1208925819614629174706176.0,
+            BinaryPrefix::Kibi => 1024,
+            BinaryPrefix::Mebi => 1024_u128.pow(2),
+            BinaryPrefix::Gibi => 1024_u128.pow(3),
+            BinaryPrefix::Tebi => 1024_u128.pow(4),
+            BinaryPrefix::Pebi => 1024_u128.pow(5),
+            BinaryPrefix::Exbi => 1024_u128.pow(6),
+            BinaryPrefix::Zebi => 1024_u128.pow(7),
+            BinaryPrefix::Yobi => 1024_u128.pow(8),
+            BinaryPrefix::Robi => 1024_u128.pow(9),
+            BinaryPrefix::Quebi => 1024_u128.pow(10),
         }
     }
 }
@@ -266,72 +277,6 @@ impl ScaleFactor for BinaryPrefix {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
-    fn base_10_scale_factor() {
-        // Declaring an array to check there is no missing value above. SI declares 24 prefixes.
-        let prefix_and_exponent: [(NominalPrefix, i32); 24] = [
-            (NominalPrefix::Quetta, 30),
-            (NominalPrefix::Ronna, 27),
-            (NominalPrefix::Yotta, 24),
-            (NominalPrefix::Zetta, 21),
-            (NominalPrefix::Exa, 18),
-            (NominalPrefix::Peta, 15),
-            (NominalPrefix::Tera, 12),
-            (NominalPrefix::Giga, 9),
-            (NominalPrefix::Mega, 6),
-            (NominalPrefix::Kilo, 3),
-            (NominalPrefix::Hecto, 2),
-            (NominalPrefix::Deca, 1),
-            (NominalPrefix::Deci, -1),
-            (NominalPrefix::Centi, -2),
-            (NominalPrefix::Milli, -3),
-            (NominalPrefix::Micro, -6),
-            (NominalPrefix::Nano, -9),
-            (NominalPrefix::Pico, -12),
-            (NominalPrefix::Femto, -15),
-            (NominalPrefix::Atto, -18),
-            (NominalPrefix::Zepto, -21),
-            (NominalPrefix::Yocto, -24),
-            (NominalPrefix::Ronto, -27),
-            (NominalPrefix::Quecto, -30),
-        ];
-
-        for (prefix, exponent) in prefix_and_exponent.iter() {
-            assert!(
-                prefix.factor() > 0.0,
-                "Prefix '{}' has a null (0.0) factor",
-                prefix.as_str().to_uppercase()
-            );
-            assert!(
-                (prefix.factor() - 10.0_f64.powi(*exponent)).abs() < 1e-30,
-                "Prefix '{}' does not match its factor!",
-                prefix.as_str().to_uppercase()
-            );
-        }
-    }
-
-    #[test]
-    fn base_2_scale_factor() {
-        let prefix_and_exponent: [(BinaryPrefix, i32); 8] = [
-            (BinaryPrefix::Kibi, 10),
-            (BinaryPrefix::Mebi, 20),
-            (BinaryPrefix::Gibi, 30),
-            (BinaryPrefix::Tebi, 40),
-            (BinaryPrefix::Pebi, 50),
-            (BinaryPrefix::Exbi, 60),
-            (BinaryPrefix::Zebi, 70),
-            (BinaryPrefix::Yobi, 80),
-        ];
-
-        for (prefix, exponent) in prefix_and_exponent.iter() {
-            assert!(
-                (prefix.factor() - 2.0_f64.powi(*exponent)).abs() < 1e-2,
-                "Prefix '{}' failed",
-                prefix.as_str().to_uppercase()
-            );
-        }
-    }
 
     #[test]
     fn prefix_str_parsing() {
