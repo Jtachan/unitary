@@ -70,60 +70,117 @@ pub enum BaseUnit {
 /// `byte`  -> four (4) bits
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum DerivedUnit {
+    // ------------ Accepted SI units ------------
+    /// Derived unit (SI) for **solid angles**, defined as a radian `rad`.
+    /// Represented with the symbol `sr`.
+    /// While radians and steradians are numerically equal, the SI defines the steradian as the
+    /// default unit for any 3D measured angles.
+    Steradian,
+    /// Derived unit (SI) for **frequency**, defined as inverse second `s^-1`.
+    /// Represented with the symbol `Hz`.
+    Hertz,
+    /// Derived unit (SI) for **force**, defined as `kg * m * s^-2`.
+    /// Represented with the symbol `N`.
+    Newton,
+    /// Derived unit (SI) for **pressure**, defined as Newtons per square meter `N / m^2`
+    /// (or `kg * m^-1 * s^-2`).
+    /// Represented with the symbol `Pa`.
+    Pascal,
+    /// Derived unit (SI) for **energy** (amount of heat), defined as Newtons time meters `N * m`
+    /// (or `kg * m^2 * s^-2`).
+    /// Represented with the symbol `J`.
+    Joule,
+    /// Derived unit (SI) for **power**, defined as Joules per second `J / s`
+    /// (or `kg * m^2 * s^-3`).
+    /// Represented with the symbol `W`.
+    Watt,
+    /// Derived unit (SI) for **electric charge**, defined as ampere times second `A * s`
+    /// Represented with the symbol `C`.
+    Coulomb,
+    /// Derived unit (SI) for **electric potential difference**, defined as watt per ampere `W / A`
+    /// (or `kg * m^2 * s^-3 * A^-1`).
+    /// Represented with the symbol `V`.
+    Volt,
+    /// Derived unit (SI) for **capacitance**, defined as coulomb per volt `C / V`
+    /// (or `kg^-1 * m^-2 * s^4 * A^2`).
+    /// Represented with the symbol `F`.
+    Farad,
+    /// Derived unit (SI) for **electric resistance**, defined as volt per ampere `V / A`
+    /// (or `kg * m^2 * s^-3 * A^-2`).
+    /// Represented with the symbol `Ω` (omega).
+    Ohm,
+    /// Derived unit (SI) for **electric conductance**, defined as ampere per volt `A / V`
+    /// (or `kg^-1 * m^-2 * s^3 * A^2`).
+    /// Represented with the symbol `S`.
+    Siemens,
+    /// Derived unit (SI) for **magnetic flux**,  defined as volts times second `V * s`
+    /// (or `kg * m^2 * s^-2 * A^-1`).
+    /// Represented with the symbol `Wb`.
+    Weber,
+    /// Derived unit (SI) for **magnetic flux density**, defined as weber per square meter `Wb / m^2`
+    /// (or `kg * s^-2 * A^-1`).
+    /// Represented with the symbol `T`.
+    Tesla,
+    /// Derived unit (SI) for **inductance**, defined as weber per ampere `Wb / A`
+    /// (or `kg * m^2 * s^-2 * A^-2`).
+    /// Represented with the symbol `H`.
+    Henry,
+    /// Derived unit (SI) for **temperature**, defined as a difference (offset) of 273.15 Kelvin `273.15 K`.
+    /// Represented with the symbol `°C`.
+    Celsius,
+    /// Derived unit (SI) for **luminous flux**, defined as candela times steradian `cd * sr`.
+    /// Represented with the symbol `lm`.
+    Lumen,
+    /// Derived unit (SI) for **illuminance**, defined as lumen per square meter `lm / m^s`
+    /// (or `cd * sr * m^-2`).
+    /// Represented with the symbol `lm`.
+    Lux,
+    /// Derived unit (SI) for **activity referred to a radiounuclide**, defined as inverse seconds `s^-1`.
+    /// Represented with the symbol `Bq`.
+    /// This quantity is sometimes incorrectly called as _radioactivity_.
+    Becquerel,
+    /// Derived unit (SI) for **absorbed dose** (_kerna_), defined as joule per kilogram `J / kg`
+    /// (or `m^2 * s^-2`).
+    /// Represented with the symbol `Bq`.
+    Gray,
+    /// Derived unit (SI) for **dose equivalent**, defined as joule per kilogram `J / kg`
+    /// (or `m^2 * s^-2`).
+    /// Represented with the symbol `Sv`.
+    Sievert,
+    /// Derived unit (SI) for **catalytic activity**, defined as mole per second `mol / s`
+    /// Represented with the symbol `kat`.
+    Katal,
+
+    // todo: integrate the following units
+    // ------------ Non-SI units ------------
+    // /// Derived unit for **time**, defined as 60 seconds `60 s`.
+    // /// Represented with the symbol `min`.
+    // Minute,
+    // /// Derived unit for **time**, defined as 60 minutes `60 min` (or `3_600 s`).
+    // /// Represented with the symbol `h`.
+    // Hour,
+    // /// Derived unit for **time**, defined as 24 hours `24 h` (or `86_400 s`).
+    // /// Represented with the symbol `d`.
+    // Day,
+    // /// Derived unit for **phase angle**, defined as pi/180 radians,
+    // /// Represented with the symbol `°`.
+    // Degree,
+    // /// Derived unit for **area**, defined as one square hectometre `hm^2` (or `10^4 m^2`).
+    // /// Represented with the symbol `ha`.
+    // Hectare,
+    // /// Derived unit for **volume**, defined as a cubic decimeter `dm^3` (10^-3 cubic meters) and
+    // /// represented with the symbol `L`.
+    // /// The SI Brochure accepts both symbols `l` and `L` to define liters. In order to avoid
+    // /// confusion, `unitary` uses the symbol `L` to diferenciate liters from the numeral one (`1`)
+    // /// and the capital letter `I`, which might look like the lowercase `l` at some fonts.
+    // Liter,
+    // /// Derived unit for **mass**, defined as `10^3 kg`.
+    // /// Represented with the symbol `t`.
+    // Tonne,
+    // ------------ Binary units ------------
     /// Derived unit for **binary information**, defined as four bits (`2^2 bit`).
     /// Represented with the symbol `B`.
     Byte,
-    /// Derived unit for **frequency**, defined as inverse second `s^-1`.
-    /// Represented with the symbol `Hz`.
-    Hertz,
-    /// Derived unit for **force**, defined as `kg * m * s^-2`.
-    /// Represented with the symbol `N`.
-    Newton,
-    /// Derived unit for **pressure**, defined as Newtons per square meter `N / m^2` (or `kg * m^-1 * s^-2`).
-    /// Represented with the symbol `Pa`.
-    Pascal,
-    /// Derived unit for **energy** (amount of heat), defined as Newtons time meters `N * m` (or `kg * m^2 * s^-2`).
-    /// Represented with the symbol `J`.
-    Joule,
-    /// Derived unit for **power**, defined as Joules per second `J / s` (or `kg * m^2 * s^-3`).
-    /// Represented with the symbol `W`.
-    Watt,
-    /// Derived unit for **electric charge**, defined as ampere times second `A * s`
-    /// Represented with the symbol `C`.
-    Coulomb,
-    /// Derived unit for **electric potential difference**, defined as watt per ampere `W / A` (or `kg * m^2 * s^-3 * A^-1`).
-    /// Represented with the symbol `V`.
-    Volt,
-    /// Derived unit for **magnetic flux**, defined as volts times second `V * s`.
-    /// Represented with the symbol `T`.
-    Tesla,
-    /// Derived unit for **temperature**, defined as a difference (offset) of 273.15 Kelvin `273.15 K`.
-    /// Represented with the symbol `°C`.
-    Celsius,
-    /// Derived unit for **time**, defined as 60 seconds `60 s`.
-    /// Represented with the symbol `min`.
-    Minute,
-    /// Derived unit for **time**, defined as 60 minutes `60 min` (or `3_600 s`).
-    /// Represented with the symbol `h`.
-    Hour,
-    /// Derived unit for **time**, defined as 24 hours `24 h` (or `86_400 s`).
-    /// Represented with the symbol `d`.
-    Day,
-    /// Derived unit for **phase angle**, defined as pi/180 radians,
-    /// Represented with the symbol `°`.
-    Degree,
-    /// Derived unit for **area**, defined as one square hectometre `hm^2` (or `10^4 m^2`).
-    /// Represented with the symbol `ha`.
-    Hectare,
-    /// Derived unit for **volume**, defined as a cubic decimeter `dm^3` (10^-3 cubic meters) and
-    /// represented with the symbol `L`.
-    /// The SI Brochure accepts both symbols `l` and `L` to define liters. In order to avoid
-    /// confusion, `unitary` uses the symbol `L` to diferenciate liters from the numeral one (`1`)
-    /// and the capital letter `I`, which might look like the lowercase `l` at some fonts.
-    Liter,
-    /// Derived unit for **mass**, defined as `10^3 kg`.
-    /// Represented with the symbol `t`.
-    Tonne,
 }
 
 // -------------------------------------------------------------------
