@@ -240,6 +240,8 @@ impl FromStr for BaseUnit {
             "mole" => Ok(BaseUnit::Mole),
             "candela" => Ok(BaseUnit::Candela),
             "one" => Ok(BaseUnit::One),
+            "radian" => Ok(BaseUnit::Radian),
+            "bit" => Ok(BaseUnit::Bit),
             _ => Err(ParseUnitError {
                 // Todo: Use the error for panicking at user level.
                 _message: format!(
