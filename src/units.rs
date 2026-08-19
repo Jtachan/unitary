@@ -268,7 +268,7 @@ mod test {
     //   - Converting units to base units
 
     #[test]
-    fn base_si_unit_parsing() {
+    fn base_unit_completeness() {
         let si_unit_names: [&str; 10] = [
             "second",
             "meter",
@@ -299,5 +299,48 @@ mod test {
 
         let result = BaseUnit::from_str("invalid");
         assert!(result.is_err());
+    }
+
+    #[test]
+    fn derived_unit_completeness() {
+        let derived_unit_names: [&str; 22] = [
+            "steradian",
+            "hertz",
+            "newton",
+            "pascal",
+            "joule",
+            "watt",
+            "coulomb",
+            "volt",
+            "farad",
+            "ohm",
+            "siemens",
+            "weber",
+            "tesla",
+            "henry",
+            "celsius",
+            "lumen",
+            "lux",
+            "becquerel",
+            "gray",
+            "sievert",
+            "katal",
+            "byte",
+        ];
+
+        for unit_name in derived_unit_names.iter() {
+            let unit = DerivedUnit::from_str(unit_name);
+            assert!(
+                unit.is_ok(),
+                "[Trait `FromStr`] Failed at unit {}",
+                unit_name.to_uppercase());
+            let unit = unit.unwrap();
+            assert_eq!(
+                unit.as_str(),
+                *unit_name,
+                "[Method `as_str`] Failed at unit {}.",
+                unit_name.to_uppercase()
+            );
+        }
     }
 }
