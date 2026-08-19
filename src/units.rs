@@ -223,19 +223,8 @@ pub trait UnitSimplify {
 
 /// Parses a string (either unit name or type of quantity for the unit) as case-insensitive.
 ///
-/// The only valid quantity names to be parsed are:
-/// - `"time"` for second
-/// - `"length"` for meter
-/// - `"mass"` for gram
-/// - `"current"` for ampere
-/// - `"temperature"` for kelvin
-/// - `"substance"` for mole
-/// - `"luminosity"` for candela
-/// - `"adimensional"` for one
-///
 /// # Examples
 /// `"Second"` -> [`BaseUnit::Second`]
-/// `"time"` -> [`BaseUnit::Second`]
 ///
 /// # Errors
 /// Returns [`ParseUnitError`] if `s` does not match with either
@@ -243,19 +232,20 @@ impl FromStr for BaseUnit {
     type Err = ParseUnitError;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.to_lowercase().as_str() {
-            "second" | "time" => Ok(BaseUnit::Second),
-            "meter" | "length" => Ok(BaseUnit::Meter),
-            "gram" | "mass" => Ok(BaseUnit::Gram),
-            "ampere" | "current" => Ok(BaseUnit::Ampere),
-            "kelvin" | "temperature" => Ok(BaseUnit::Kelvin),
-            "mole" | "substance" => Ok(BaseUnit::Mole),
-            "candela" | "luminosity" => Ok(BaseUnit::Candela),
-            "one" | "adimensional" => Ok(BaseUnit::One),
+            "second" => Ok(BaseUnit::Second),
+            "meter" => Ok(BaseUnit::Meter),
+            "gram" => Ok(BaseUnit::Gram),
+            "ampere" => Ok(BaseUnit::Ampere),
+            "kelvin" => Ok(BaseUnit::Kelvin),
+            "mole" => Ok(BaseUnit::Mole),
+            "candela" => Ok(BaseUnit::Candela),
+            "one" => Ok(BaseUnit::One),
             _ => Err(ParseUnitError {
                 // Todo: Use the error for panicking at user level.
                 _message: format!(
                     "'{}' is not a valid SI base unit. Make sure your unit has no typos \
-                    and it is in singular. E.G.: 'second' instead of 'seconds'.",
+                    and it is in singular. E.G.: 'second' instead of 'seconds' or \
+                    'meter' instead of 'metre'.",
                     s
                 ),
             }),
@@ -277,25 +267,31 @@ mod test {
 
     #[test]
     fn base_si_unit_parsing() {
-        let si_unit_names = [
-            ("second", "time"),
-            ("meter", "length"),
-            ("gram", "mass"),
-            ("ampere", "current"),
-            ("kelvin", "temperature"),
-            ("mole", "substance"),
-            ("candela", "luminosity"),
-            ("one", "adimensional"),
+        let si_unit_names: [&str; 10] = [
+            "second",
+            "meter",
+            "gram",
+            "ampere",
+            "kelvin",
+            "mole",
+            "candela",
+            "one",
+            "radian",
+            "bit",
         ];
 
-        for (unit, quantity) in si_unit_names.iter() {
-            let base_unit: BaseUnit = unit.parse().unwrap();
-            let base_quantity = BaseUnit::from_str(quantity).unwrap();
+        for unit_name in si_unit_names.iter() {
+            let base_unit = BaseUnit::from_str(unit_name);
+            assert!(
+                base_unit.is_ok(),
+                "[Trait `FromStr`] Failed at unit {}",
+                unit_name.to_uppercase());
+            let base_unit = base_unit.unwrap();
             assert_eq!(
-                base_unit,
-                base_quantity,
-                "Failed at unit {}",
-                base_unit.as_str().to_uppercase()
+                base_unit.as_str(),
+                *unit_name,
+                "[Method `as_str`] Failed at unit {}.",
+                unit_name.to_uppercase()
             );
         }
 

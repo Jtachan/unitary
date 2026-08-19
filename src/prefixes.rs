@@ -317,28 +317,28 @@ mod tests {
             let prefix = NominalPrefix::from_str(name);
             assert!(
                 prefix.is_ok(),
-                "Failed at prefix {}. Trait: `FromStr`",
+                "[Trait `FromStr`] Failed at prefix {}",
                 name.to_uppercase()
             );
             let prefix = prefix.unwrap();
             assert_eq!(
                 prefix.as_str(),
                 name,
-                "Failed at prefix {}. Method: `as_str` not implemented",
+                "[Method `as_str`] Failed at prefix {}.",
                 name.to_uppercase()
             );
             if factor > 1.0 {
                 assert_eq!(
                     prefix.factor() as u128,
                     factor as u128,
-                    "Failed at prefix {}. Trait `ScaleFactor`",
+                    "[Trait `ScaleFactor`] Failed at prefix {}.",
                     name.to_uppercase()
                 )
             } else {
                 let res = prefix.factor() / factor; // Result should be 1.0
                 assert!(
                     (res - 1.0).abs() < 1e-6,
-                    "Failed at prefix {}. Trait `ScaleFactor`",
+                    "[Trait `ScaleFactor`] Failed at prefix {}.",
                     name.to_uppercase()
                 );
             }
@@ -367,20 +367,20 @@ mod tests {
             let prefix = BinaryPrefix::from_str(name);
             assert!(
                 prefix.is_ok(),
-                "Failed at prefix {}. Trait: `FromStr`",
+                "[Trait `FromStr`] Failed at prefix {}",
                 name.to_uppercase()
             );
             let prefix = prefix.unwrap();
             assert_eq!(
                 prefix.as_str(),
                 name,
-                "Failed at prefix {}. Method: `as_str` not implemented",
+                "[Method `as_str`] Failed at prefix {}.",
                 name.to_uppercase()
             );
             assert_eq!(
                 prefix.factor(),
                 factor,
-                "Failed at prefix {}. Trait `ScaleFactor`",
+                "[Trait `ScaleFactor`] Failed at prefix {}.",
                 name.to_uppercase()
             )
         }
