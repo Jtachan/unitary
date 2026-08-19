@@ -281,12 +281,15 @@ impl ScaleFactor for BinaryPrefix {
 mod tests {
     use super::*;
 
+    const NOF_NOMINAL_PREFIXES: usize = 24;
+    const NOF_BINARY_PREFIXES: usize = 10;
+
     // Testing all methods are fully implemented and no member is left without defining.
     // The purpose of this test is just to check all prefixes were defined correctly.
     #[test]
     fn nominal_prefix_completeness() {
         // "prefix_data" was manually created out of the SI brochure, section 3, table 7.
-        let prefix_data: [(&str, f64); 24] = [
+        let prefix_data: [(&str, f64); NOF_NOMINAL_PREFIXES] = [
             ("deca", 1e1),
             ("hecto", 1e2),
             ("kilo", 1e3),
@@ -350,7 +353,7 @@ mod tests {
     #[test]
     fn binary_prefix_completeness() {
         // "prefix_data" was manually parsed from the SI Brochure, section 3, las paragraph.
-        let prefix_data: [(&str, u128); 10] = [
+        let prefix_data: [(&str, u128); NOF_BINARY_PREFIXES] = [
             ("kibi", 2_u128.pow(10)),
             ("mebi", 2_u128.pow(20)),
             ("gibi", 2_u128.pow(30)),

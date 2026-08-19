@@ -322,9 +322,12 @@ impl FromStr for DerivedUnit {
 mod test {
     use super::*;
 
+    const NOF_BASE_UNITS: usize = 10;
+    const NOF_DERIVED_UNITS: usize = 22;
+
     #[test]
     fn base_unit_completeness() {
-        let si_unit_names: [&str; 10] = [
+        let si_unit_names: [&str; NOF_BASE_UNITS] = [
             "second", "meter", "gram", "ampere", "kelvin", "mole", "candela", "one", "radian",
             "bit",
         ];
@@ -351,7 +354,7 @@ mod test {
 
     #[test]
     fn derived_unit_completeness() {
-        let derived_unit_names: [&str; 22] = [
+        let derived_unit_names: [&str; NOF_DERIVED_UNITS] = [
             "steradian",
             "hertz",
             "newton",
