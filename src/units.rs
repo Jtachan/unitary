@@ -3,9 +3,7 @@
 use std::str::FromStr;
 
 #[derive(Debug)]
-pub struct ParseUnitError {
-    _message: String,
-}
+pub struct ParseUnitError;
 
 // -------------------------------------------------------------------
 //                      Enums defining all units
@@ -205,6 +203,37 @@ impl BaseUnit {
     }
 }
 
+impl DerivedUnit {
+    /// Return the name of the member as a reference to a `str`.
+    /// The capitalisation of each member is based on the SI brochure.
+    pub fn as_str(&self) -> &str {
+        match &self {
+            DerivedUnit::Steradian => "steradian",
+            DerivedUnit::Hertz => "hertz",
+            DerivedUnit::Newton => "newton",
+            DerivedUnit::Pascal => "pascal",
+            DerivedUnit::Joule => "joule",
+            DerivedUnit::Watt => "watt",
+            DerivedUnit::Coulomb => "coulomb",
+            DerivedUnit::Volt => "volt",
+            DerivedUnit::Farad => "farad",
+            DerivedUnit::Ohm => "ohm",
+            DerivedUnit::Siemens => "siemens",
+            DerivedUnit::Weber => "weber",
+            DerivedUnit::Tesla => "tesla",
+            DerivedUnit::Henry => "henry",
+            DerivedUnit::Celsius => "Celsius",
+            DerivedUnit::Lumen => "lumen",
+            DerivedUnit::Lux => "lux",
+            DerivedUnit::Becquerel => "becquerel",
+            DerivedUnit::Gray => "gray",
+            DerivedUnit::Sievert => "sievert",
+            DerivedUnit::Katal => "katal",
+            DerivedUnit::Byte => "byte",
+        }
+    }
+}
+
 // -------------------------------------------------------------------
 //                          Custom trait definitions
 // -------------------------------------------------------------------
@@ -227,7 +256,7 @@ pub trait UnitSimplify {
 /// `"Second"` -> [`BaseUnit::Second`]
 ///
 /// # Errors
-/// Returns [`ParseUnitError`] if `s` does not match with either
+/// Returns [`ParseUnitError`] if `s` does not match any name.
 impl FromStr for BaseUnit {
     type Err = ParseUnitError;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
@@ -242,15 +271,45 @@ impl FromStr for BaseUnit {
             "one" => Ok(BaseUnit::One),
             "radian" => Ok(BaseUnit::Radian),
             "bit" => Ok(BaseUnit::Bit),
-            _ => Err(ParseUnitError {
-                // Todo: Use the error for panicking at user level.
-                _message: format!(
-                    "'{}' is not a valid SI base unit. Make sure your unit has no typos \
-                    and it is in singular. E.G.: 'second' instead of 'seconds' or \
-                    'meter' instead of 'metre'.",
-                    s
-                ),
-            }),
+            _ => Err(ParseUnitError),
+        }
+    }
+}
+
+/// Parses a string (either unit name or type of quantity for the unit) as case-insensitive.
+///
+/// # Examples
+/// `"Hertz"` -> [`DerivedUnit::Hertz`]
+///
+/// # Errors
+/// Returns [`ParseUnitError`] if `s` does not match any name.
+impl FromStr for DerivedUnit {
+    type Err = ParseUnitError;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.to_lowercase().as_str() {
+            "steradian" => Ok(DerivedUnit::Steradian),
+            "hertz" => Ok(DerivedUnit::Hertz),
+            "newton" => Ok(DerivedUnit::Newton),
+            "pascal" => Ok(DerivedUnit::Pascal),
+            "joule" => Ok(DerivedUnit::Joule),
+            "watt" => Ok(DerivedUnit::Watt),
+            "coulomb" => Ok(DerivedUnit::Coulomb),
+            "volt" => Ok(DerivedUnit::Volt),
+            "farad" => Ok(DerivedUnit::Farad),
+            "ohm" => Ok(DerivedUnit::Ohm),
+            "siemens" => Ok(DerivedUnit::Siemens),
+            "weber" => Ok(DerivedUnit::Weber),
+            "tesla" => Ok(DerivedUnit::Tesla),
+            "henry" => Ok(DerivedUnit::Henry),
+            "celsius" => Ok(DerivedUnit::Celsius),
+            "lumen" => Ok(DerivedUnit::Lumen),
+            "lux" => Ok(DerivedUnit::Lux),
+            "becquerel" => Ok(DerivedUnit::Becquerel),
+            "gray" => Ok(DerivedUnit::Gray),
+            "sievert" => Ok(DerivedUnit::Sievert),
+            "katal" => Ok(DerivedUnit::Katal),
+            "byte" => Ok(DerivedUnit::Byte),
+            _ => Err(ParseUnitError),
         }
     }
 }
@@ -263,22 +322,10 @@ impl FromStr for BaseUnit {
 mod test {
     use super::*;
 
-    // todo: add test cases for the derived units.
-    //   - Parsing units from input strings
-    //   - Converting units to base units
-
     #[test]
     fn base_unit_completeness() {
         let si_unit_names: [&str; 10] = [
-            "second",
-            "meter",
-            "gram",
-            "ampere",
-            "kelvin",
-            "mole",
-            "candela",
-            "one",
-            "radian",
+            "second", "meter", "gram", "ampere", "kelvin", "mole", "candela", "one", "radian",
             "bit",
         ];
 
@@ -287,7 +334,8 @@ mod test {
             assert!(
                 base_unit.is_ok(),
                 "[Trait `FromStr`] Failed at unit {}",
-                unit_name.to_uppercase());
+                unit_name.to_uppercase()
+            );
             let base_unit = base_unit.unwrap();
             assert_eq!(
                 base_unit.as_str(),
@@ -318,7 +366,7 @@ mod test {
             "weber",
             "tesla",
             "henry",
-            "celsius",
+            "Celsius",
             "lumen",
             "lux",
             "becquerel",
@@ -333,7 +381,8 @@ mod test {
             assert!(
                 unit.is_ok(),
                 "[Trait `FromStr`] Failed at unit {}",
-                unit_name.to_uppercase());
+                unit_name.to_uppercase()
+            );
             let unit = unit.unwrap();
             assert_eq!(
                 unit.as_str(),
