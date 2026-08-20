@@ -96,7 +96,7 @@ pub enum BinaryPrefix {
 impl NominalPrefix {
     /// Return the name of the member as a reference to a `str`.
     pub fn as_str(&self) -> &str {
-        match &self {
+        match self {
             NominalPrefix::Quetta => "quetta",
             NominalPrefix::Ronna => "ronna",
             NominalPrefix::Yotta => "yotta",
@@ -128,7 +128,7 @@ impl NominalPrefix {
 impl BinaryPrefix {
     /// Return the name of the member as a reference to a `str`.
     pub fn as_str(&self) -> &str {
-        match &self {
+        match self {
             BinaryPrefix::Kibi => "kibi",
             BinaryPrefix::Mebi => "mebi",
             BinaryPrefix::Gibi => "gibi",

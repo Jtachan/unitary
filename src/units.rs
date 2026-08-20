@@ -188,7 +188,7 @@ pub enum DerivedUnit {
 impl BaseUnit {
     /// Return the name of the member as a reference to a `str`.
     pub fn as_str(&self) -> &str {
-        match &self {
+        match self {
             BaseUnit::Second => "second",
             BaseUnit::Meter => "meter",
             BaseUnit::Gram => "gram",
@@ -207,7 +207,7 @@ impl DerivedUnit {
     /// Return the name of the member as a reference to a `str`.
     /// The capitalisation of each member is based on the SI brochure.
     pub fn as_str(&self) -> &str {
-        match &self {
+        match self {
             DerivedUnit::Steradian => "steradian",
             DerivedUnit::Hertz => "hertz",
             DerivedUnit::Newton => "newton",
