@@ -152,11 +152,10 @@ impl BinaryPrefix {
 /// Implemented by both [`NominalPrefix`] and [`BinaryPrefix`] to allow both enums to be
 /// handled generically.
 pub trait ScaleFactor {
-    type ReturnType;
     /// Returns the multiplicative scale as an `f64`.
     ///
-    /// E.G.: `Kilo.factor()` -> `1000.0` and `Kibi.factor()` -> `1024.0`
-    fn factor(&self) -> Self::ReturnType;
+    /// E.G.: `Kilo.factor()` -> `1000.0` and `Kibi.factor()` -> `1024`
+    fn factor(&self) -> f64;
 }
 
 // -------------------------------------------------------------------
@@ -224,7 +223,6 @@ impl FromStr for BinaryPrefix {
 }
 
 impl ScaleFactor for NominalPrefix {
-    type ReturnType = f64;
     fn factor(&self) -> f64 {
         match self {
             NominalPrefix::Quetta => 1e30,
@@ -256,19 +254,18 @@ impl ScaleFactor for NominalPrefix {
 }
 
 impl ScaleFactor for BinaryPrefix {
-    type ReturnType = u128;
-    fn factor(&self) -> u128 {
+    fn factor(&self) -> f64 {
         match self {
-            BinaryPrefix::Kibi => 1024,
-            BinaryPrefix::Mebi => 1024_u128.pow(2),
-            BinaryPrefix::Gibi => 1024_u128.pow(3),
-            BinaryPrefix::Tebi => 1024_u128.pow(4),
-            BinaryPrefix::Pebi => 1024_u128.pow(5),
-            BinaryPrefix::Exbi => 1024_u128.pow(6),
-            BinaryPrefix::Zebi => 1024_u128.pow(7),
-            BinaryPrefix::Yobi => 1024_u128.pow(8),
-            BinaryPrefix::Robi => 1024_u128.pow(9),
-            BinaryPrefix::Quebi => 1024_u128.pow(10),
+            BinaryPrefix::Kibi => 1024.0,
+            BinaryPrefix::Mebi => 1024_f64.powi(2),
+            BinaryPrefix::Gibi => 1024_f64.powi(3),
+            BinaryPrefix::Tebi => 1024_f64.powi(4),
+            BinaryPrefix::Pebi => 1024_f64.powi(5),
+            BinaryPrefix::Exbi => 1024_f64.powi(6),
+            BinaryPrefix::Zebi => 1024_f64.powi(7),
+            BinaryPrefix::Yobi => 1024_f64.powi(8),
+            BinaryPrefix::Robi => 1024_f64.powi(9),
+            BinaryPrefix::Quebi => 1024_f64.powi(10),
         }
     }
 }
@@ -353,17 +350,17 @@ mod tests {
     #[test]
     fn binary_prefix_completeness() {
         // "prefix_data" was manually parsed from the SI Brochure, section 3, las paragraph.
-        let prefix_data: [(&str, u128); NOF_BINARY_PREFIXES] = [
-            ("kibi", 2_u128.pow(10)),
-            ("mebi", 2_u128.pow(20)),
-            ("gibi", 2_u128.pow(30)),
-            ("tebi", 2_u128.pow(40)),
-            ("pebi", 2_u128.pow(50)),
-            ("exbi", 2_u128.pow(60)),
-            ("zebi", 2_u128.pow(70)),
-            ("yobi", 2_u128.pow(80)),
-            ("robi", 2_u128.pow(90)),
-            ("quebi", 2_u128.pow(100)),
+        let prefix_data: [(&str, f64); NOF_BINARY_PREFIXES] = [
+            ("kibi", 2_f64.powi(10)),
+            ("mebi", 2_f64.powi(20)),
+            ("gibi", 2_f64.powi(30)),
+            ("tebi", 2_f64.powi(40)),
+            ("pebi", 2_f64.powi(50)),
+            ("exbi", 2_f64.powi(60)),
+            ("zebi", 2_f64.powi(70)),
+            ("yobi", 2_f64.powi(80)),
+            ("robi", 2_f64.powi(90)),
+            ("quebi", 2_f64.powi(100)),
         ];
 
         for (name, factor) in prefix_data {
