@@ -52,10 +52,6 @@ pub enum BaseUnit {
     One,
     /// Unit for **phase angles**, represented with the symbol `rad`.
     Radian,
-    /// Unit for **binary information**, represented with the symbol `bit`.
-    /// The binary information is the only quantity that can be expressed with `NominalPrefixes`
-    /// (kilo, milli, mega, etc.) as well as with `BinaryPrefixes`
-    Bit,
 }
 
 /// Enumeration for all derived units.
@@ -65,7 +61,6 @@ pub enum BaseUnit {
 ///
 /// **Examples**
 /// `liter` -> cubic decimeter (`\deci\meter\tothe{3}`)
-/// `byte`  -> four (4) bits
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum DerivedUnit {
     // ------------ Accepted SI units ------------
@@ -175,9 +170,20 @@ pub enum DerivedUnit {
     // /// Derived unit for **mass**, defined as `10^3 kg`.
     // /// Represented with the symbol `t`.
     // Tonne,
-    // ------------ Binary units ------------
-    /// Derived unit for **binary information**, defined as four bits (`2^2 bit`).
-    /// Represented with the symbol `B`.
+}
+
+/// Enumeration for **binary information** units with a binary base.
+///
+/// The binary information is the only quantity that can be expressed with `NominalPrefixes`
+/// (kilo, milli, mega, etc.) as well as with `BinaryPrefixes`.
+///
+/// Following the SI Brochure, `NominalPrefixes` will not represent the information in a binary
+/// base. E.G.: `\kilo\byte` corresponds to 1000 bytes and not 1024 bytes.
+pub enum BinaryUnit {
+    /// Base binary unit, represented with the symbol `bit`.
+    Bit,
+    /// Commonly used binary unit, represented with the symbol `B`. It is defined as four bits
+    /// `2^2 bit`.
     Byte,
 }
 
@@ -198,7 +204,6 @@ impl BaseUnit {
             BaseUnit::Candela => "candela",
             BaseUnit::One => "one",
             BaseUnit::Radian => "radian",
-            BaseUnit::Bit => "bit",
         }
     }
 }
@@ -229,7 +234,15 @@ impl DerivedUnit {
             DerivedUnit::Gray => "gray",
             DerivedUnit::Sievert => "sievert",
             DerivedUnit::Katal => "katal",
-            DerivedUnit::Byte => "byte",
+        }
+    }
+}
+
+impl BinaryUnit {
+    pub fn as_str(&self) -> &str {
+        match self {
+            BinaryUnit::Bit => "bit",
+            BinaryUnit::Byte => "byte",
         }
     }
 }
@@ -270,7 +283,6 @@ impl FromStr for BaseUnit {
             "candela" => Ok(BaseUnit::Candela),
             "one" => Ok(BaseUnit::One),
             "radian" => Ok(BaseUnit::Radian),
-            "bit" => Ok(BaseUnit::Bit),
             _ => Err(ParseUnitError),
         }
     }
@@ -308,7 +320,17 @@ impl FromStr for DerivedUnit {
             "gray" => Ok(DerivedUnit::Gray),
             "sievert" => Ok(DerivedUnit::Sievert),
             "katal" => Ok(DerivedUnit::Katal),
-            "byte" => Ok(DerivedUnit::Byte),
+            _ => Err(ParseUnitError),
+        }
+    }
+}
+
+impl FromStr for BinaryUnit {
+    type Err = ParseUnitError;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.to_lowercase().as_str() {
+            "bit" => Ok(BinaryUnit::Bit),
+            "byte" => Ok(BinaryUnit::Byte),
             _ => Err(ParseUnitError),
         }
     }
@@ -322,14 +344,13 @@ impl FromStr for DerivedUnit {
 mod test {
     use super::*;
 
-    const NOF_BASE_UNITS: usize = 10;
-    const NOF_DERIVED_UNITS: usize = 22;
+    const NOF_BASE_UNITS: usize = 9;
+    const NOF_DERIVED_UNITS: usize = 21;
 
     #[test]
     fn base_unit_completeness() {
         let si_unit_names: [&str; NOF_BASE_UNITS] = [
             "second", "meter", "gram", "ampere", "kelvin", "mole", "candela", "one", "radian",
-            "bit",
         ];
 
         for unit_name in si_unit_names.iter() {
@@ -376,7 +397,6 @@ mod test {
             "gray",
             "sievert",
             "katal",
-            "byte",
         ];
 
         for unit_name in derived_unit_names.iter() {
